@@ -704,6 +704,7 @@ test('mobile nav hides section links, keeps CV', async ({ page }) => {
   await page.goto('/');
   const nav = page.locator('header nav');
   await expect(nav.locator('a[href="/#projects"]')).toBeHidden();
+  await expect(nav.locator('button, [aria-expanded]')).toHaveCount(0);
   await expect(nav.locator(`a[href="${CANONICAL.cv}"]`)).toBeVisible();
 });
 ```
@@ -836,6 +837,7 @@ Favicon/OG files referenced here are created in Task 10 — the tags are inert u
 ---
 import '@fontsource/fraunces/latin-600.css';
 import '@fontsource/fraunces/latin-700.css';
+import fraunces600 from '@fontsource/fraunces/files/fraunces-latin-600-normal.woff2?url';
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
@@ -854,6 +856,7 @@ const ogImage = new URL('/images/og.png', Astro.site);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preload" as="font" type="font/woff2" href={fraunces600} crossorigin />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
