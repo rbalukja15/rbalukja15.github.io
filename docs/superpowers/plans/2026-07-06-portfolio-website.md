@@ -176,9 +176,10 @@ Tokens implement spec §4 (minimal editorial palette). The `.reveal` classes imp
   --surface-alt: #f5f3ee;
   --ink: #111214;
   --ink-soft: #55575c;
-  --ink-faint: #8a8d93;
+  --ink-faint: #6f7278;
   --accent: #1d4ed8;
   --border: #e5e3dc;
+  --border-strong: #d8d5cc;
   --chip-bg: #f1efe9;
 
   --font-serif: 'Fraunces', Georgia, 'Times New Roman', serif;
@@ -197,6 +198,7 @@ Tokens implement spec §4 (minimal editorial palette). The `.reveal` classes imp
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 4.5rem;
 }
 
 body {
@@ -251,6 +253,7 @@ img {
 
 /* Animated link underline (spec §4) */
 .fancy-link {
+  display: inline-block;
   position: relative;
   font-weight: 600;
   font-size: 0.875rem;
@@ -280,6 +283,14 @@ img {
 .reveal.is-visible {
   opacity: 1;
   transform: none;
+}
+
+/* Content must never be gated on JS: if scripting is unavailable, show everything */
+@media (scripting: none) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1269,7 +1280,7 @@ const { title, bullets, stack, thumbnail, links } = project.data;
   .card:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-hover);
-    border-color: #d8d5cc;
+    border-color: var(--border-strong);
   }
   .thumb,
   .monogram {
@@ -1543,6 +1554,9 @@ const { title, tagline, context, stack, links, isPrivate } = project.data;
   .prose :global(li) {
     color: var(--ink-soft);
     font-size: 0.95rem;
+  }
+  .prose :global(a) {
+    text-decoration: underline;
   }
   .prose :global(img) {
     border: 1px solid var(--border);
