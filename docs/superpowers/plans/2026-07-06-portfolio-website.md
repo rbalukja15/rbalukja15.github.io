@@ -46,6 +46,7 @@ src/
   pages/projects/[id].astro       case studies (routed by entry id)
   pages/404.astro
 tests/
+  canonical.ts                    shared canonical-URL table (spec §9.1) — NOT a spec file
   home.spec.ts                    six sections + section contents
   links.spec.ts                   canonical hrefs + CV PDF resolution
   projects.spec.ts                cards + case-study pages
@@ -652,14 +653,14 @@ git commit -m "test: Playwright harness against built site"
 - Create: `tests/links.spec.ts`
 - Modify: `src/pages/index.astro`
 
-- [ ] **Step 1: Write the failing tests — `tests/links.spec.ts`**
+- [ ] **Step 1: Write the failing tests — `tests/canonical.ts` + `tests/links.spec.ts`**
 
-These assert the canonical URL table from spec §9.1 **exactly**. The card-link assertions (tenantiq GitHub etc.) are added in Task 7; this file starts with nav/footer/CV.
+The canonical URL table (spec §9.1) lives in its own non-spec helper — Playwright forbids one spec file from importing another, and Task 7's spec imports this table too.
+
+`tests/canonical.ts`:
 
 ```ts
-import { test, expect } from '@playwright/test';
-
-// Canonical URLs — spec §9.1. Frontmatter and this file must agree.
+// Canonical URLs — spec §9.1. Frontmatter and the specs must agree.
 export const CANONICAL = {
   tenantiqGithub: 'https://github.com/rbalukja15/tenantiq',
   uiKitGithub: 'https://github.com/rbalukja15/react-ui-kit',
@@ -669,6 +670,13 @@ export const CANONICAL = {
   email: 'mailto:romarjo.balukja@gmail.com',
   cv: '/Romarjo_Balukja_CV.pdf',
 };
+```
+
+`tests/links.spec.ts` (the card-link assertions for tenantiq GitHub etc. are added in Task 7; this file starts with nav/footer/CV):
+
+```ts
+import { test, expect } from '@playwright/test';
+import { CANONICAL } from './canonical';
 
 test('nav renders brand, section links, and CV button', async ({ page }) => {
   await page.goto('/');
@@ -912,7 +920,7 @@ Expected: 0 errors.
 - [ ] **Step 8: Commit**
 
 ```bash
-git add src/layouts/BaseLayout.astro src/components/Nav.astro src/components/Footer.astro src/pages/index.astro tests/links.spec.ts
+git add src/layouts/BaseLayout.astro src/components/Nav.astro src/components/Footer.astro src/pages/index.astro tests/canonical.ts tests/links.spec.ts
 git commit -m "feat: base layout with shared nav and footer"
 ```
 
@@ -1179,13 +1187,13 @@ git commit -m "feat: home hero, skills, and experience sections"
 **Files:**
 - Create: `src/components/ProjectCard.astro`
 - Create: `tests/projects.spec.ts`
-- Modify: `src/pages/index.astro`, `tests/links.spec.ts`
+- Modify: `src/pages/index.astro`
 
 - [ ] **Step 1: Write the failing tests — `tests/projects.spec.ts`**
 
 ```ts
 import { test, expect } from '@playwright/test';
-import { CANONICAL } from './links.spec';
+import { CANONICAL } from './canonical';
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/');
