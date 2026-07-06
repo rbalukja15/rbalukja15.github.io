@@ -1195,45 +1195,47 @@ git commit -m "feat: home hero, skills, and experience sections"
 import { test, expect } from '@playwright/test';
 import { CANONICAL } from './canonical';
 
-test.beforeEach(async ({ page }) => {
-  await page.goto('/');
-});
+test.describe('home cards', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/');
+  });
 
-test('renders three project cards, lowest order featured full-width', async ({ page }) => {
-  const cards = page.locator('#projects article');
-  await expect(cards).toHaveCount(3);
-  // order-driven, not slug-driven (spec §3.1): first card = order 1 = tenantiq
-  await expect(cards.first()).toContainText('tenantiq');
-  await expect(cards.first()).toHaveClass(/featured/);
-});
+  test('renders three project cards, lowest order featured full-width', async ({ page }) => {
+    const cards = page.locator('#projects article');
+    await expect(cards).toHaveCount(3);
+    // order-driven, not slug-driven (spec §3.1): first card = order 1 = tenantiq
+    await expect(cards.first()).toContainText('tenantiq');
+    await expect(cards.first()).toHaveClass(/featured/);
+  });
 
-test('every card shows bullets, stack chips, and a case-study link', async ({ page }) => {
-  const cards = page.locator('#projects article');
-  for (let i = 0; i < 3; i++) {
-    const card = cards.nth(i);
-    await expect(card.locator('ul li').first()).toBeVisible();
-    await expect(card.locator('.chip').first()).toBeVisible();
-    await expect(card.locator('a[href^="/projects/"]')).toBeVisible();
-  }
-});
+  test('every card shows bullets, stack chips, and a case-study link', async ({ page }) => {
+    const cards = page.locator('#projects article');
+    for (let i = 0; i < 3; i++) {
+      const card = cards.nth(i);
+      await expect(card.locator('ul li').first()).toBeVisible();
+      await expect(card.locator('.chip').first()).toBeVisible();
+      await expect(card.locator('a[href^="/projects/"]')).toBeVisible();
+    }
+  });
 
-test('cards render thumbnail or monogram fallback (both states valid)', async ({ page }) => {
-  const cards = page.locator('#projects article');
-  for (let i = 0; i < 3; i++) {
-    const card = cards.nth(i);
-    const hasVisual =
-      (await card.locator('img.thumb').count()) + (await card.locator('.monogram').count());
-    expect(hasVisual).toBe(1);
-  }
-});
+  test('cards render thumbnail or monogram fallback (both states valid)', async ({ page }) => {
+    const cards = page.locator('#projects article');
+    for (let i = 0; i < 3; i++) {
+      const card = cards.nth(i);
+      const hasVisual =
+        (await card.locator('img.thumb').count()) + (await card.locator('.monogram').count());
+      expect(hasVisual).toBe(1);
+    }
+  });
 
-test('public projects link out; vetapp does not', async ({ page }) => {
-  const projects = page.locator('#projects');
-  await expect(projects.locator(`a[href="${CANONICAL.tenantiqGithub}"]`)).toBeVisible();
-  await expect(projects.locator(`a[href="${CANONICAL.uiKitGithub}"]`)).toBeVisible();
-  await expect(projects.locator(`a[href="${CANONICAL.storybook}"]`)).toBeVisible();
-  const vetappCard = projects.locator('article', { hasText: 'vetapp' });
-  await expect(vetappCard.locator('a[href*="github.com"]')).toHaveCount(0);
+  test('public projects link out; vetapp does not', async ({ page }) => {
+    const projects = page.locator('#projects');
+    await expect(projects.locator(`a[href="${CANONICAL.tenantiqGithub}"]`)).toBeVisible();
+    await expect(projects.locator(`a[href="${CANONICAL.uiKitGithub}"]`)).toBeVisible();
+    await expect(projects.locator(`a[href="${CANONICAL.storybook}"]`)).toBeVisible();
+    const vetappCard = projects.locator('article', { hasText: 'vetapp' });
+    await expect(vetappCard.locator('a[href*="github.com"]')).toHaveCount(0);
+  });
 });
 ```
 
@@ -1463,16 +1465,7 @@ test('tenantiq case study links to its repo', async ({ page }) => {
 });
 ```
 
-Note these tests use `test.beforeEach` from Step 1 of Task 7 only where defined — the new tests navigate explicitly, so move the existing `test.beforeEach` into a `test.describe('home cards', ...)` block wrapping the four Task 7 tests, and leave the new case-study tests outside it:
-
-```ts
-test.describe('home cards', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-  });
-  // ...the four Task 7 tests move inside here unchanged...
-});
-```
+The home-cards tests are already wrapped in `test.describe('home cards', ...)` with their `beforeEach` scoped inside (done in Task 7) — append the new case-study tests at top level, OUTSIDE that block; they navigate explicitly.
 
 - [ ] **Step 2: Run to verify they fail**
 
