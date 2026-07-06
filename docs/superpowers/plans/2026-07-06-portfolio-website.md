@@ -22,7 +22,7 @@
 astro.config.mjs                  Astro config: site URL + sitemap integration
 package.json / package-lock.json  Pinned deps (lockfile MUST be committed — withastro/action requires it)
 tsconfig.json                     extends astro/tsconfigs/strict
-playwright.config.ts              webServer: build + preview on :4321
+playwright.config.ts              webServer: build + preview on :4399 (dedicated port — 4321 belongs to astro dev)
 .github/workflows/deploy.yml      test job → withastro/action build job → deploy job
 public/
   Romarjo_Balukja_CV.pdf          (already committed)
@@ -604,17 +604,20 @@ import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests',
+  forbidOnly: !!process.env.CI,
   webServer: {
-    command: 'npm run build && npm run preview',
-    url: 'http://localhost:4321/',
+    command: 'npm run build && npm run preview -- --port 4399',
+    url: 'http://localhost:4399/',
     timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI,
   },
   use: {
-    baseURL: 'http://localhost:4321/',
+    baseURL: 'http://localhost:4399/',
   },
 });
 ```
+
+(Port 4399 is dedicated to the test server — `astro dev` and `astro preview` both default to 4321, and `reuseExistingServer` must never pick up a dev server. `forbidOnly` keeps a stray `.only` from silently shrinking the CI gate.)
 
 - [ ] **Step 4: Write `tests/smoke.spec.ts`**
 
