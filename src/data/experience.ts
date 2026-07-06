@@ -7,7 +7,7 @@ export interface ExperienceEntry {
 
 export const experience: ExperienceEntry[] = [
   {
-    role: 'Senior Software Engineer — Full-Stack & Platform',
+    role: 'Senior Software Engineer, Full-Stack & Platform',
     org: 'Public-transport e-ticketing company',
     period: 'Jan 2023 – present',
     line: 'Multi-tenant Next.js webshop, Keycloak/Better Auth SSO, PWA ticket viewer, Kubernetes + GitLab CI/CD.',

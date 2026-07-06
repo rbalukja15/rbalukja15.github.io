@@ -5,7 +5,7 @@ import { experience } from '../data/experience';
   <div class="container">
     <h2>Experience</h2>
     <p class="hint">The details live in the <a href="/Romarjo_Balukja_CV.pdf" target="_blank" rel="noopener">CV</a>.</p>
-    <ul>
+    <ul role="list">
       {experience.map(({ role, org, period, line }, i) => (
         <li>
           <span class:list={['dot', { current: i === 0 }]} aria-hidden="true"></span>
