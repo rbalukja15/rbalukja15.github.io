@@ -1260,7 +1260,7 @@ const { title, bullets, stack, thumbnail, links } = project.data;
 ---
 <article class:list={['card', { featured }]}>
   {thumbnail ? (
-    <img class="thumb" src={thumbnail} alt={`${title} screenshot`} />
+    <img class="thumb" src={thumbnail} alt={`${title} screenshot`} loading={featured ? 'eager' : 'lazy'} decoding="async" />
   ) : (
     <div class="monogram" aria-hidden="true">{title.charAt(0)}</div>
   )}
@@ -1273,12 +1273,12 @@ const { title, bullets, stack, thumbnail, links } = project.data;
       {stack.map((s) => <span class="chip">{s}</span>)}
     </div>
     <div class="links">
-      <a class="fancy-link" href={`/projects/${project.id}/`}>Case study &rarr;</a>
+      <a class="fancy-link" href={`/projects/${project.id}/`} aria-label={`Case study: ${title}`}>Case study &rarr;</a>
       {links?.github && (
-        <a class="fancy-link" href={links.github} rel="noopener">GitHub &nearr;</a>
+        <a class="fancy-link" href={links.github} target="_blank" rel="noopener" aria-label={`GitHub: ${title}`}>GitHub &nearr;</a>
       )}
       {links?.live && (
-        <a class="fancy-link" href={links.live} rel="noopener">{links.liveLabel} &nearr;</a>
+        <a class="fancy-link" href={links.live} target="_blank" rel="noopener" aria-label={`${links.liveLabel}: ${title}`}>{links.liveLabel} &nearr;</a>
       )}
     </div>
   </div>
@@ -1346,6 +1346,10 @@ const { title, bullets, stack, thumbnail, links } = project.data;
   .links {
     display: flex;
     gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .links a {
+    padding-block: 0.25rem;
   }
 </style>
 ```
@@ -1497,8 +1501,8 @@ const { title, tagline, context, stack, links, isPrivate } = project.data;
         {stack.map((s) => <span class="chip">{s}</span>)}
       </div>
       <div class="links">
-        {links?.github && <a class="fancy-link" href={links.github} rel="noopener">GitHub &nearr;</a>}
-        {links?.live && <a class="fancy-link" href={links.live} rel="noopener">{links.liveLabel} &nearr;</a>}
+        {links?.github && <a class="fancy-link" href={links.github} target="_blank" rel="noopener">GitHub &nearr;</a>}
+        {links?.live && <a class="fancy-link" href={links.live} target="_blank" rel="noopener">{links.liveLabel} &nearr;</a>}
         {isPrivate && <span class="private-note">Private production codebase</span>}
       </div>
     </header>
