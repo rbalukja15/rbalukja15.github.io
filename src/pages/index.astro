@@ -1,13 +1,27 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import Skills from '../components/Skills.astro';
+import ExperienceTimeline from '../components/ExperienceTimeline.astro';
 ---
 <BaseLayout
   title="Romarjo Balukja — Senior Software Engineer"
   description="Senior software engineer with 7+ years building production web applications end to end — React and Django, through Kubernetes and GitOps."
 >
   <main>
-    <section class="section container">
-      <h1>Romarjo Balukja</h1>
+    <Hero />
+    <section id="projects" class="section">
+      <div class="container">
+        <h2>Selected work</h2>
+      </div>
     </section>
+    <Skills />
+    <ExperienceTimeline />
   </main>
 </BaseLayout>
+
+<style>
+  #projects h2 {
+    font-size: 1.375rem;
+  }
+</style>

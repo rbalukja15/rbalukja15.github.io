@@ -1,0 +1,48 @@
+---
+import { skills } from '../data/skills';
+---
+<section id="skills" class="section alt">
+  <div class="container">
+    <h2>Skills</h2>
+    {skills.map(({ group, items }) => (
+      <div class="skill-group">
+        <span class="group-name">{group}</span>
+        <span class="group-items">{items.join(' · ')}</span>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .alt {
+    background: var(--surface-alt);
+  }
+  h2 {
+    font-size: 1.375rem;
+    margin-bottom: 1.25rem;
+  }
+  .skill-group {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.7rem;
+    font-size: 0.9rem;
+  }
+  .group-name {
+    flex: 0 0 8.5rem;
+    color: var(--ink-faint);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding-top: 0.15rem;
+  }
+  .group-items {
+    color: var(--ink-soft);
+  }
+  @media (max-width: 640px) {
+    .skill-group {
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+  }
+</style>
