@@ -1,0 +1,66 @@
+---
+---
+<header class="site-header">
+  <nav class="container" aria-label="Main">
+    <a class="brand" href="/">Romarjo Balukja</a>
+    <div class="section-links">
+      <a href="/#projects">Projects</a>
+      <a href="/#skills">Skills</a>
+      <a href="/#experience">Experience</a>
+    </div>
+    <a class="cv-btn" href="/Romarjo_Balukja_CV.pdf" target="_blank" rel="noopener">Download CV</a>
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+  }
+  .brand {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    color: var(--ink);
+    margin-right: auto;
+  }
+  .section-links {
+    display: flex;
+    gap: 1.1rem;
+  }
+  .section-links a {
+    color: var(--ink-soft);
+    font-size: 0.875rem;
+    transition: color var(--dur) ease;
+  }
+  .section-links a:hover {
+    color: var(--ink);
+  }
+  .cv-btn {
+    background: var(--ink);
+    color: var(--bg);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    padding: 0.45rem 0.9rem;
+    border-radius: 6px;
+    transition: opacity var(--dur) ease;
+  }
+  .cv-btn:hover {
+    opacity: 0.85;
+  }
+  /* Mobile: name + CV only — no hamburger, no JS (spec §3.1) */
+  @media (max-width: 640px) {
+    .section-links {
+      display: none;
+    }
+  }
+</style>
