@@ -2097,7 +2097,7 @@ git commit -m "content: full case-study drafts for all three projects"
 
 - [ ] **Step 3: Real-device pass** — open the site on a phone: mobile nav shows name + CV only, cards stack single-column, CV opens in a viewer.
 
-- [ ] **Step 4: Screenshot slot-in (whenever the user supplies them; vetapp = demo data only)** — drop files in `public/images/`, add `thumbnail: /images/<name>.png` to the project frontmatter, embed `![...](/images/<name>.png)` figures in the case-study bodies, run `npx playwright test` (the both-states card test keeps passing), commit, push.
+- [ ] **Step 4: Screenshot slot-in (whenever the user supplies them; vetapp = demo data only)** — resize to ≤ 1200px wide and compress first (raw screenshots can be multi-MB and this step runs *after* the Lighthouse audit), then drop files in `public/images/`, add `thumbnail: /images/<name>.png` to the project frontmatter, embed `![...](/images/<name>.png)` figures in the case-study bodies, run `npx playwright test` (the both-states card test keeps passing), re-check Lighthouse Performance on `/`, commit, push.
 
 ---
 
