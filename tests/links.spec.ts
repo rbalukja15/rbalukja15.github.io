@@ -45,5 +45,6 @@ test('mobile nav hides section links, keeps CV', async ({ page }) => {
   await page.goto('/');
   const nav = page.locator('header nav');
   await expect(nav.locator('a[href="/#projects"]')).toBeHidden();
+  await expect(nav.locator('button, [aria-expanded]')).toHaveCount(0);
   await expect(nav.locator(`a[href="${CANONICAL.cv}"]`)).toBeVisible();
 });
