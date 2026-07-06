@@ -176,7 +176,7 @@ Tokens implement spec §4 (minimal editorial palette). The `.reveal` classes imp
   --surface-alt: #f5f3ee;
   --ink: #111214;
   --ink-soft: #55575c;
-  --ink-faint: #6f7278;
+  --ink-faint: #696c72;
   --accent: #1d4ed8;
   --border: #e5e3dc;
   --border-strong: #d8d5cc;
@@ -528,7 +528,7 @@ export interface ExperienceEntry {
 
 export const experience: ExperienceEntry[] = [
   {
-    role: 'Senior Software Engineer — Full-Stack & Platform',
+    role: 'Senior Software Engineer, Full-Stack & Platform',
     org: 'Public-transport e-ticketing company',
     period: 'Jan 2023 – present',
     line: 'Multi-tenant Next.js webshop, Keycloak/Better Auth SSO, PWA ticket viewer, Kubernetes + GitLab CI/CD.',
@@ -1068,7 +1068,7 @@ import { experience } from '../data/experience';
   <div class="container">
     <h2>Experience</h2>
     <p class="hint">The details live in the <a href="/Romarjo_Balukja_CV.pdf" target="_blank" rel="noopener">CV</a>.</p>
-    <ul>
+    <ul role="list">
       {experience.map(({ role, org, period, line }, i) => (
         <li>
           <span class:list={['dot', { current: i === 0 }]} aria-hidden="true"></span>
