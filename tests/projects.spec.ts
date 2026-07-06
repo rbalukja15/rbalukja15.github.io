@@ -43,3 +43,26 @@ test.describe('home cards', () => {
     await expect(vetappCard.locator('a[href*="github.com"]')).toHaveCount(0);
   });
 });
+
+const CASE_STUDIES = ['/projects/tenantiq/', '/projects/react-ui-kit/', '/projects/vetapp/'];
+
+for (const path of CASE_STUDIES) {
+  test(`case study ${path} loads with header`, async ({ page }) => {
+    const response = await page.goto(path);
+    expect(response?.status()).toBe(200);
+    await expect(page.locator('main h1')).toBeVisible();
+    await expect(page.locator('.tagline')).toBeVisible();
+    await expect(page.locator('.chip').first()).toBeVisible();
+  });
+}
+
+test('vetapp case study shows private note, no repo links', async ({ page }) => {
+  await page.goto('/projects/vetapp/');
+  await expect(page.locator('main')).toContainText('Private production codebase');
+  await expect(page.locator('main a[href*="github.com/rbalukja15/vetapp"]')).toHaveCount(0);
+});
+
+test('tenantiq case study links to its repo', async ({ page }) => {
+  await page.goto('/projects/tenantiq/');
+  await expect(page.locator(`main a[href="${CANONICAL.tenantiqGithub}"]`)).toBeVisible();
+});
