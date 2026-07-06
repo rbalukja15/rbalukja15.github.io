@@ -1,0 +1,101 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  featured?: boolean;
+}
+
+const { project, featured = false } = Astro.props;
+const { title, bullets, stack, thumbnail, links } = project.data;
+---
+<article class:list={['card', { featured }]}>
+  {thumbnail ? (
+    <img class="thumb" src={thumbnail} alt={`${title} screenshot`} />
+  ) : (
+    <div class="monogram" aria-hidden="true">{title.charAt(0)}</div>
+  )}
+  <div class="body">
+    <h3>{title}</h3>
+    <ul>
+      {bullets.map((b) => <li>{b}</li>)}
+    </ul>
+    <div class="chips">
+      {stack.map((s) => <span class="chip">{s}</span>)}
+    </div>
+    <div class="links">
+      <a class="fancy-link" href={`/projects/${project.id}/`}>Case study &rarr;</a>
+      {links?.github && (
+        <a class="fancy-link" href={links.github} rel="noopener">GitHub &nearr;</a>
+      )}
+      {links?.live && (
+        <a class="fancy-link" href={links.live} rel="noopener">{links.liveLabel} &nearr;</a>
+      )}
+    </div>
+  </div>
+</article>
+
+<style>
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform var(--dur) ease, box-shadow var(--dur) ease,
+      border-color var(--dur) ease;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--border-strong);
+  }
+  .thumb,
+  .monogram {
+    height: 150px;
+    width: 100%;
+    object-fit: cover;
+    object-position: top;
+  }
+  .monogram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--chip-bg);
+    color: var(--accent);
+    font-family: var(--font-serif);
+    font-size: 3rem;
+    font-weight: 700;
+  }
+  .body {
+    padding: 1.1rem 1.25rem 1.25rem;
+  }
+  h3 {
+    font-size: 1.05rem;
+    margin-bottom: 0.4rem;
+  }
+  ul {
+    margin: 0 0 0.75rem;
+    padding-left: 1.1rem;
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+  }
+  li {
+    margin-bottom: 0.2rem;
+  }
+  .chips {
+    margin-bottom: 0.85rem;
+  }
+  .chip {
+    display: inline-block;
+    background: var(--chip-bg);
+    color: var(--ink-soft);
+    font-size: 0.7rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    margin: 0 0.25rem 0.25rem 0;
+  }
+  .links {
+    display: flex;
+    gap: 1rem;
+  }
+</style>

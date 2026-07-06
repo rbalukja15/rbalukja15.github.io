@@ -1,15 +1,5 @@
 import { test, expect } from '@playwright/test';
-
-// Canonical URLs — spec §9.1. Frontmatter and this file must agree.
-export const CANONICAL = {
-  tenantiqGithub: 'https://github.com/rbalukja15/tenantiq',
-  uiKitGithub: 'https://github.com/rbalukja15/react-ui-kit',
-  storybook: 'https://rbalukja15.github.io/react-ui-kit/',
-  githubProfile: 'https://github.com/rbalukja15',
-  linkedin: 'https://www.linkedin.com/in/romarjo-balukja',
-  email: 'mailto:romarjo.balukja@gmail.com',
-  cv: '/Romarjo_Balukja_CV.pdf',
-};
+import { CANONICAL } from './canonical';
 
 test('nav renders brand, section links, and CV button', async ({ page }) => {
   await page.goto('/');

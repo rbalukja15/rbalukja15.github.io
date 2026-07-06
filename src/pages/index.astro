@@ -1,8 +1,15 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
+import ProjectCard from '../components/ProjectCard.astro';
 import Skills from '../components/Skills.astro';
 import ExperienceTimeline from '../components/ExperienceTimeline.astro';
+
+const projects = (await getCollection('projects')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+const [featured, ...rest] = projects;
 ---
 <BaseLayout
   title="Romarjo Balukja — Senior Software Engineer"
@@ -13,6 +20,11 @@ import ExperienceTimeline from '../components/ExperienceTimeline.astro';
     <section id="projects" class="section">
       <div class="container">
         <h2>Selected work</h2>
+        <p class="sub">Each opens a full case study.</p>
+        <ProjectCard project={featured} featured />
+        <div class="pair">
+          {rest.map((p) => <ProjectCard project={p} />)}
+        </div>
       </div>
     </section>
     <Skills />
@@ -23,5 +35,24 @@ import ExperienceTimeline from '../components/ExperienceTimeline.astro';
 <style>
   #projects h2 {
     font-size: 1.375rem;
+    margin-bottom: 0.25rem;
+  }
+  .sub {
+    color: var(--ink-faint);
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+  }
+  #projects :global(.featured) {
+    margin-bottom: 1rem;
+  }
+  .pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  @media (max-width: 640px) {
+    .pair {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
