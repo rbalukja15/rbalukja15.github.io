@@ -59,10 +59,15 @@ for (const path of CASE_STUDIES) {
 test('vetapp case study shows private note, no repo links', async ({ page }) => {
   await page.goto('/projects/vetapp/');
   await expect(page.locator('main')).toContainText('Private production codebase');
-  await expect(page.locator('main a[href*="github.com/rbalukja15/vetapp"]')).toHaveCount(0);
+  await expect(page.locator('main a[href*="github.com"]')).toHaveCount(0);
 });
 
 test('tenantiq case study links to its repo', async ({ page }) => {
   await page.goto('/projects/tenantiq/');
   await expect(page.locator(`main a[href="${CANONICAL.tenantiqGithub}"]`)).toBeVisible();
+});
+
+test('react-ui-kit case study links to its Storybook', async ({ page }) => {
+  await page.goto('/projects/react-ui-kit/');
+  await expect(page.locator(`main a[href="${CANONICAL.storybook}"]`)).toContainText('Storybook');
 });
