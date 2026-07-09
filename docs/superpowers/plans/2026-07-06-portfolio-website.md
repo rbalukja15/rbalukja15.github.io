@@ -116,6 +116,7 @@ dist/
 .astro/
 test-results/
 playwright-report/
+scripts/.favicon-*.png
 ```
 
 - [ ] **Step 5: Write placeholder `src/pages/index.astro`**
@@ -876,6 +877,9 @@ const ogImage = new URL('/images/og.png', Astro.site);
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Romarjo Balukja — Senior Software Engineer" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
@@ -1802,7 +1806,7 @@ Sitemap: https://rbalukja15.github.io/sitemap-index.xml
 // Renders scripts/og-template.html to public/images/og.png (1200x630).
 // Requires @playwright/test installed and `npx playwright install chromium`.
 // Run: node scripts/generate-og.mjs
-import { chromium } from 'playwright';
+import { chromium } from '@playwright/test';
 import { pathToFileURL } from 'node:url';
 import { mkdirSync } from 'node:fs';
 import path from 'node:path';
@@ -1812,10 +1816,13 @@ const outPath = path.resolve('public/images/og.png');
 mkdirSync(path.dirname(outPath), { recursive: true });
 
 const browser = await chromium.launch();
-const page = await browser.newPage({ viewport: { width: 1200, height: 630 } });
-await page.goto(pathToFileURL(htmlPath).href);
-await page.screenshot({ path: outPath });
-await browser.close();
+try {
+  const page = await browser.newPage({ viewport: { width: 1200, height: 630 } });
+  await page.goto(pathToFileURL(htmlPath).href);
+  await page.screenshot({ path: outPath });
+} finally {
+  await browser.close();
+}
 console.log(`Wrote ${outPath}`);
 ```
 
@@ -1824,7 +1831,7 @@ console.log(`Wrote ${outPath}`);
 ```js
 // Renders public/favicon.svg to a 64x64 PNG, converts to public/favicon.ico.
 // Run: node scripts/generate-favicon.mjs
-import { chromium } from 'playwright';
+import { chromium } from '@playwright/test';
 import { pathToFileURL } from 'node:url';
 import { writeFileSync, rmSync } from 'node:fs';
 import path from 'node:path';
@@ -1834,10 +1841,13 @@ const svgPath = path.resolve('public/favicon.svg');
 const tmpPng = path.resolve('scripts/.favicon-64.png');
 
 const browser = await chromium.launch();
-const page = await browser.newPage({ viewport: { width: 64, height: 64 } });
-await page.goto(pathToFileURL(svgPath).href);
-await page.screenshot({ path: tmpPng });
-await browser.close();
+try {
+  const page = await browser.newPage({ viewport: { width: 64, height: 64 } });
+  await page.goto(pathToFileURL(svgPath).href);
+  await page.screenshot({ path: tmpPng });
+} finally {
+  await browser.close();
+}
 
 writeFileSync(path.resolve('public/favicon.ico'), await pngToIco(tmpPng));
 rmSync(tmpPng);
