@@ -65,6 +65,9 @@ test('home sections reveal on scroll', async ({ page }) => {
 test('reduced motion shows everything without scrolling', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
-  // CSS force-shows .reveal under reduced motion; content must be readable immediately
-  await expect(page.locator('#experience .reveal').first()).toBeVisible();
+  // CSS force-shows .reveal under reduced motion; content must be readable immediately.
+  // toBeVisible() ignores opacity, so assert opacity:1 explicitly — that is the real guarantee.
+  const revealed = page.locator('#experience .reveal').first();
+  await expect(revealed).toBeVisible();
+  await expect(revealed).toHaveCSS('opacity', '1');
 });
