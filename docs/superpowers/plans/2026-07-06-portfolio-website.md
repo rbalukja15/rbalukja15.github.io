@@ -1460,12 +1460,17 @@ for (const path of CASE_STUDIES) {
 test('vetapp case study shows private note, no repo links', async ({ page }) => {
   await page.goto('/projects/vetapp/');
   await expect(page.locator('main')).toContainText('Private production codebase');
-  await expect(page.locator('main a[href*="github.com/rbalukja15/vetapp"]')).toHaveCount(0);
+  await expect(page.locator('main a[href*="github.com"]')).toHaveCount(0);
 });
 
 test('tenantiq case study links to its repo', async ({ page }) => {
   await page.goto('/projects/tenantiq/');
   await expect(page.locator(`main a[href="${CANONICAL.tenantiqGithub}"]`)).toBeVisible();
+});
+
+test('react-ui-kit case study links to its Storybook', async ({ page }) => {
+  await page.goto('/projects/react-ui-kit/');
+  await expect(page.locator(`main a[href="${CANONICAL.storybook}"]`)).toContainText('Storybook');
 });
 ```
 
@@ -1557,6 +1562,9 @@ const { title, tagline, context, stack, links, isPrivate } = project.data;
     font-size: 0.8125rem;
     font-style: italic;
   }
+  .prose {
+    max-width: 65ch;
+  }
   .prose :global(h2) {
     font-size: 1.25rem;
     margin: 2rem 0 0.6rem;
@@ -1573,6 +1581,19 @@ const { title, tagline, context, stack, links, isPrivate } = project.data;
     border: 1px solid var(--border);
     border-radius: var(--radius);
     margin: 1rem 0;
+  }
+  .prose :global(pre) {
+    padding: 1rem;
+    border-radius: var(--radius);
+    overflow-x: auto;
+    font-size: 0.85rem;
+    margin: 1rem 0;
+  }
+  .prose :global(:not(pre) > code) {
+    background: var(--chip-bg);
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+    font-size: 0.9em;
   }
 </style>
 ```
@@ -1605,7 +1626,7 @@ const { Content } = await render(project);
 - [ ] **Step 5: Run tests to verify green**
 
 Run: `npx playwright test`
-Expected: ALL PASS.
+Expected: ALL PASS (19 tests: 1 smoke + 4 links + 4 home + 10 projects).
 
 Run: `npm run check`
 Expected: 0 errors.
@@ -2108,7 +2129,7 @@ git commit -m "content: full case-study drafts for all three projects"
 
 - [ ] **Step 3: Real-device pass** — open the site on a phone: mobile nav shows name + CV only, cards stack single-column, CV opens in a viewer.
 
-- [ ] **Step 4: Screenshot slot-in (whenever the user supplies them; vetapp = demo data only)** — resize to ≤ 1200px wide and compress first (raw screenshots can be multi-MB and this step runs *after* the Lighthouse audit), then drop files in `public/images/`, add `thumbnail: /images/<name>.png` to the project frontmatter, embed `![...](/images/<name>.png)` figures in the case-study bodies, run `npx playwright test` (the both-states card test keeps passing), re-check Lighthouse Performance on `/`, commit, push.
+- [ ] **Step 4: Screenshot slot-in (whenever the user supplies them; vetapp = demo data only)** — resize to ≤ 1200px wide and compress first (raw screenshots can be multi-MB and this step runs *after* the Lighthouse audit), then drop files in `public/images/`, add `thumbnail: /images/<name>.png` to the project frontmatter, embed figures in the case-study bodies as raw HTML `<img src="/images/<name>.png" width="1200" height="750" alt="..." loading="lazy" />` (NOT Markdown `![]()` — the width/height attributes prevent layout shift, and Astro passes raw HTML through), run `npx playwright test` (the both-states card test keeps passing), re-check Lighthouse Performance on `/` AND on the case-study page that received screenshots, commit, push.
 
 ---
 
