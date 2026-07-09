@@ -5,6 +5,7 @@ import Hero from '../components/Hero.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import Skills from '../components/Skills.astro';
 import ExperienceTimeline from '../components/ExperienceTimeline.astro';
+import Reveal from '../components/Reveal.astro';
 
 const projects = (await getCollection('projects')).sort(
   (a, b) => a.data.order - b.data.order
@@ -19,12 +20,14 @@ const [featured, ...rest] = projects;
     <Hero />
     <section id="projects" class="section">
       <div class="container">
-        <h2>Selected work</h2>
-        <p class="sub">Each opens a full case study.</p>
-        <ProjectCard project={featured} featured />
-        <div class="pair">
-          {rest.map((p) => <ProjectCard project={p} />)}
-        </div>
+        <Reveal>
+          <h2>Selected work</h2>
+          <p class="sub">Each opens a full case study.</p>
+          <ProjectCard project={featured} featured />
+          <div class="pair">
+            {rest.map((p) => <ProjectCard project={p} />)}
+          </div>
+        </Reveal>
       </div>
     </section>
     <Skills />

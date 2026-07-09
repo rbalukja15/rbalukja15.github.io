@@ -1,21 +1,24 @@
 ---
 import { experience } from '../data/experience';
+import Reveal from './Reveal.astro';
 ---
 <section id="experience" class="section">
   <div class="container">
-    <h2>Experience</h2>
-    <p class="hint">The details live in the <a href="/Romarjo_Balukja_CV.pdf" target="_blank" rel="noopener">CV</a>.</p>
-    <ul role="list">
-      {experience.map(({ role, org, period, line }, i) => (
-        <li>
-          <span class:list={['dot', { current: i === 0 }]} aria-hidden="true"></span>
-          <div>
-            <strong>{role}</strong> — {org}
-            <div class="meta">{period} · {line}</div>
-          </div>
-        </li>
-      ))}
-    </ul>
+    <Reveal>
+      <h2>Experience</h2>
+      <p class="hint">The details live in the <a href="/Romarjo_Balukja_CV.pdf" target="_blank" rel="noopener">CV</a>.</p>
+      <ul role="list">
+        {experience.map(({ role, org, period, line }, i) => (
+          <li>
+            <span class:list={['dot', { current: i === 0 }]} aria-hidden="true"></span>
+            <div>
+              <strong>{role}</strong> — {org}
+              <div class="meta">{period} · {line}</div>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </Reveal>
   </div>
 </section>
 

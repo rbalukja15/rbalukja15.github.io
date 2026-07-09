@@ -39,3 +39,32 @@ for (const asset of [
     expect(response.status()).toBe(200);
   });
 }
+
+const ALL_PAGES = ['/', '/projects/tenantiq/', '/projects/react-ui-kit/', '/projects/vetapp/'];
+
+for (const path of ALL_PAGES) {
+  test(`no console errors on ${path}`, async ({ page }) => {
+    const errors: string[] = [];
+    page.on('console', (msg) => {
+      if (msg.type() === 'error') errors.push(msg.text());
+    });
+    page.on('pageerror', (err) => errors.push(err.message));
+    await page.goto(path);
+    await page.waitForLoadState('networkidle');
+    expect(errors).toEqual([]);
+  });
+}
+
+test('home sections reveal on scroll', async ({ page }) => {
+  await page.goto('/');
+  const skills = page.locator('#skills');
+  await skills.scrollIntoViewIfNeeded();
+  await expect(skills.locator('.reveal').first()).toHaveClass(/is-visible/);
+});
+
+test('reduced motion shows everything without scrolling', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  // CSS force-shows .reveal under reduced motion; content must be readable immediately
+  await expect(page.locator('#experience .reveal').first()).toBeVisible();
+});

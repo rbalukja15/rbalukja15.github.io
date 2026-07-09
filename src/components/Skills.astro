@@ -1,15 +1,18 @@
 ---
 import { skills } from '../data/skills';
+import Reveal from './Reveal.astro';
 ---
 <section id="skills" class="section alt">
   <div class="container">
-    <h2>Skills</h2>
-    {skills.map(({ group, items }) => (
-      <div class="skill-group">
-        <span class="group-name">{group}</span>
-        <span class="group-items">{items.join(' · ')}</span>
-      </div>
-    ))}
+    <Reveal>
+      <h2>Skills</h2>
+      {skills.map(({ group, items }) => (
+        <div class="skill-group">
+          <span class="group-name">{group}</span>
+          <span class="group-items">{items.join(' · ')}</span>
+        </div>
+      ))}
+    </Reveal>
   </div>
 </section>
 
