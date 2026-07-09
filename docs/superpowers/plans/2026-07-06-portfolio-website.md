@@ -1910,8 +1910,11 @@ test('home sections reveal on scroll', async ({ page }) => {
 test('reduced motion shows everything without scrolling', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');
-  // CSS force-shows .reveal under reduced motion; content must be readable immediately
-  await expect(page.locator('#experience .reveal').first()).toBeVisible();
+  // CSS force-shows .reveal under reduced motion; content must be readable immediately.
+  // toBeVisible() ignores opacity, so assert opacity:1 explicitly — that is the real guarantee.
+  const revealed = page.locator('#experience .reveal').first();
+  await expect(revealed).toBeVisible();
+  await expect(revealed).toHaveCSS('opacity', '1');
 });
 ```
 
@@ -2133,7 +2136,7 @@ git commit -m "content: full case-study drafts for all three projects"
 
 ### Task 14: Launch checklist (manual, after user approves copy)
 
-- [ ] **Step 1: Manual Lighthouse audit (spec §1/§8)** — Chrome DevTools → Lighthouse, **mobile preset, default throttling**, against the live URLs: `/`, all three `/projects/...`, `/404` (navigate to a bogus path). Required: ≥ 95 on Performance, Accessibility, Best Practices, SEO for every page. Fix and redeploy if any category dips (usual culprits: image sizes, missing alt text, contrast).
+- [ ] **Step 1: Manual Lighthouse audit (spec §1/§8)** — Chrome DevTools → Lighthouse, **mobile preset, default throttling**, against the live URLs: `/`, all three `/projects/...`, `/404` (navigate to a bogus path). Required: ≥ 95 on Performance, Accessibility, Best Practices, SEO for every page. Fix and redeploy if any category dips (usual culprits: image sizes, missing alt text, contrast). **If home Performance/LCP dips: the projects section (the first content block) fades in from opacity 0 via `<Reveal>`, and the LCP element may sit inside it — if flagged, either exclude that above-the-fold section from `<Reveal>`, start `.reveal` at opacity 0.001, or shorten the transition.**
 
 - [ ] **Step 2: Link-preview check** — paste `https://rbalukja15.github.io` into a LinkedIn draft post (don't publish): title, description, and the OG card must render. LinkedIn's Post Inspector (https://www.linkedin.com/post-inspector/) works too.
 
