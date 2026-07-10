@@ -21,7 +21,6 @@
     "@astrojs/check": "^0.9.9",
     "@playwright/test": "^1.61.1",
     "@types/node": "^26.1.0",
-    "png-to-ico": "^3.0.2",
     "typescript": "^5.9.3"
   }
 }
