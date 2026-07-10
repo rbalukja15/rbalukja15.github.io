@@ -15,20 +15,20 @@ links:
 
 ## Problem
 
-Across client projects I kept rebuilding the same pieces — confirmation dialogs, empty states, loading skeletons — each time slightly different, each time re-plumbing the same open/close state and re-deriving the same styling. And stock MUI, left unthemed, makes every product look like the same template. react-ui-kit is the extraction: the primitives I actually reuse, packaged behind one design language, typed strictly, and documented where anyone can click through them.
+After a few client projects I noticed I was rebuilding the same things every time: a confirm dialog, an empty state, a table skeleton. Each version slightly different, each one dragging its own open/close state around. I had also gotten tired of products that look like default MUI. So I pulled the pieces I actually reuse into a package and gave them one visual language.
 
 ## What I built
 
-A scoped npm package on MUI 5 with a deliberate, small surface: a `ConfirmDialog` driven by a promise-based `useConfirm()` hook (`if (await confirm({...}))` — no open-state plumbing at call sites), `EmptyState`, `TableSkeleton`, `FloatingCreateButton`, a generic `useDebouncedValue<T>` hook, and a `ThemeModeProvider` with a light/dark toggle. The heart is a ~300-line theme factory: warm tinted neutrals instead of pure white/black, a muted teal brand axis, editorial serif headings (Newsreader) over Inter body text, and tonal chips that render as pale tints with strong foregrounds rather than MUI's vivid default blocks. Every component ships with stories in a Storybook that CI deploys to GitHub Pages, including a design-token showcase page.
+A small npm package on top of MUI 5. The component I use most is the ConfirmDialog: you call `await confirm({...})` and get back true or false, with no dialog state in your component at all. Around it: EmptyState, TableSkeleton, FloatingCreateButton, a typed `useDebouncedValue` hook, and a theme provider with a light/dark toggle. Most of the design work went into the theme itself — warm off-whites instead of pure white, a muted teal, serif headings (Newsreader) over Inter body text, and chips that render as soft tints instead of MUI's loud solid blocks. Everything has a story, and CI publishes the Storybook to GitHub Pages so you can click through the real components.
 
 ## Architecture decisions
 
-Every component is decoupled from routing, stores, and APIs — the library takes an optional `LinkComponent` prop, so the same button works with Next.js, react-router, or a plain anchor. Cross-cutting styling lives in MUI component overrides inside the theme, not per-instance `sx`, so consumers get the design language without opting in at each call site. The package builds with tsup to dual ESM + CJS with type declarations, sourcemaps, and `sideEffects: false` for tree-shaking; TypeScript runs at maximum strictness (`strict` plus `noUncheckedIndexedAccess`). The scope is intentionally small — version 0.1.0 with a written porting roadmap for pickers and form adapters — rather than a kitchen sink of half-finished widgets.
+Nothing in the library knows about routing, state management, or any API. Components that link somewhere take a `LinkComponent` prop, so they work with Next.js, react-router, or a plain anchor. Styling lives in the MUI theme overrides rather than sprinkled per-instance, so a consumer gets the whole look by wrapping their app once. It builds to ESM and CJS with tsup, ships type declarations, and tree-shakes. TypeScript runs on the strictest settings, including `noUncheckedIndexedAccess`. It's version 0.1.0 on purpose: four components I trust and a written roadmap for the next ones, instead of thirty half-done widgets.
 
 ## Testing & quality
 
-Vitest with React Testing Library, asserting behavior through accessible roles (`getByRole('button', { name: ... })`) rather than implementation details — the confirm dialog is tested through its provider exactly as a consumer would use it. CI gates every push and PR on lint, typecheck, tests, and a production build; the Storybook deploy runs only from main.
+Vitest and React Testing Library. Tests find elements by accessible role, the way a user would, and the dialog is tested through its provider the way a real consumer mounts it. CI won't pass without lint, typecheck, tests, and a clean build; the Storybook deploy only runs from main.
 
 ## Outcome
 
-A published library with a live Storybook, serving as both a working toolkit for client projects and a standing sample of how I design component APIs: typed generics, promise-based imperative surfaces where they beat prop drilling, and framework-agnostic composition. The design system it showcases is the same visual language you are reading right now — this portfolio deliberately does not use the library, so each can be judged on its own.
+Published, documented, and in use in my own client work. One note: this portfolio doesn't use it. The site and the library share a design sensibility, but I wanted each to stand on its own.
