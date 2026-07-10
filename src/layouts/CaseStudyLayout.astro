@@ -96,6 +96,22 @@ const { title, tagline, context, stack, links, isPrivate } = project.data;
     border-radius: var(--radius);
     margin: 1rem 0;
   }
+  .prose :global(figure.shot) {
+    margin: 1.5rem 0;
+  }
+  .prose :global(figure.shot img) {
+    width: 100%;
+    height: auto;
+    margin: 0;
+    box-shadow: 0 1px 3px rgb(17 18 20 / 0.06);
+  }
+  .prose :global(figure.shot figcaption) {
+    color: var(--ink-faint);
+    font-size: 0.8rem;
+    line-height: 1.5;
+    margin-top: 0.5rem;
+    text-align: center;
+  }
   .prose :global(pre) {
     padding: 1rem;
     border-radius: var(--radius);
