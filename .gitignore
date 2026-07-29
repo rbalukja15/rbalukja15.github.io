@@ -5,3 +5,9 @@ test-results/
 playwright-report/
 .DS_Store
 scripts/.favicon-*.png
+
+# CV source + generated PDFs. This repo is PUBLIC and the HTML holds the full
+# variant (which names the FoodTracks/Antegon engagement), so it must not be
+# committed here. Only public/Romarjo_Balukja_CV.pdf — the public variant — ships.
+cv/
+.claude/
