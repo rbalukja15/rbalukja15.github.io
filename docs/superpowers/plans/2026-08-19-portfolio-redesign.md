@@ -252,6 +252,14 @@ Append to the end of the file. Only this one class — a general `.mono` helper 
 and removed as dead code, because every consumer below declares its own mono properties.
 
 ```css
+/* One focus ring for the whole site. Components must not redefine this — per-component
+   copies drifted, leaving project-card and case-study links with no focus style at all. */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
 /* Section numbering used by home sections */
 .section-label {
   font-family: var(--font-mono);
@@ -341,6 +349,7 @@ In `src/components/Nav.astro`, replace the whole `<style>` block with:
     position: sticky;
     top: 0;
     z-index: 10;
+    background: var(--bg); /* fallback: color-mix() failing would leave this transparent */
     background: color-mix(in srgb, var(--bg) 92%, transparent);
     backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--border);
@@ -383,10 +392,7 @@ In `src/components/Nav.astro`, replace the whole `<style>` block with:
   .cv-btn:hover {
     opacity: 0.88;
   }
-  :is(.brand, .section-links a, .cv-btn):focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 3px;
-  }
+  /* Focus rings live in global.css — do not redefine them per component. */
   /* Mobile: name + CV only — no hamburger, no JS (spec §3.1) */
   @media (max-width: 640px) {
     .section-links {
@@ -590,10 +596,6 @@ const headlineAccent = "don't leak";
     font-size: 0.9rem;
     text-decoration: underline;
     text-underline-offset: 4px;
-  }
-  :is(.primary, .secondary):focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 3px;
   }
   .hero-shot {
     margin: 0;
