@@ -17,6 +17,7 @@
     position: sticky;
     top: 0;
     z-index: 10;
+    background: var(--bg); /* fallback: color-mix() failing would leave this transparent */
     background: color-mix(in srgb, var(--bg) 92%, transparent);
     backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--border);
@@ -58,10 +59,6 @@
   }
   .cv-btn:hover {
     opacity: 0.88;
-  }
-  :is(.brand, .section-links a, .cv-btn):focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 3px;
   }
   /* Mobile: name + CV only — no hamburger, no JS (spec §3.1) */
   @media (max-width: 640px) {

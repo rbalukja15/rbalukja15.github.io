@@ -67,6 +67,14 @@ a {
   text-decoration: none;
 }
 
+/* One focus ring for the whole site. Components must not redefine this — the previous
+   per-component copies drifted, leaving project-card and case-study links unstyled. */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
 img {
   max-width: 100%;
   display: block;
