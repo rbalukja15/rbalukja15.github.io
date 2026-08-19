@@ -11,3 +11,6 @@ scripts/.favicon-*.png
 # committed here. Only public/Romarjo_Balukja_CV.pdf — the public variant — ships.
 cv/
 .claude/
+
+# Brainstorming mockups (local only)
+.superpowers/
