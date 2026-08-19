@@ -14,7 +14,9 @@
 
   --status-live: #5cb87f;
   /* Deliberately the same as --accent: "open source" is the default status.
-     Kept as a literal because the contrast gate parses these as raw hex. */
+     Kept literal rather than var(--accent) so this block stays self-contained and
+     readable by non-browser CSS tooling. (var() would work — getComputedStyle
+     resolves it — the choice is about indirection, not capability.) */
   --status-oss: #d98a3d;
   --status-npm: #c98bdb;
 

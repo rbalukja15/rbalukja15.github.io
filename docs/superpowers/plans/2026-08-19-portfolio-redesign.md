@@ -1463,6 +1463,11 @@ const cls=r.audits["cumulative-layout-shift"].numericValue;
 const fail=[];
 if (lcp > 1800) fail.push(`LCP ${Math.round(lcp)}ms > 1800ms budget`);
 if (cls > 0.01) fail.push(`CLS ${cls} > 0.01`);
+// Report WHICH element is LCP, not just the number. The 43% regression was missed
+// the first time precisely because only the metric was watched, never the cause.
+const el = r.audits["largest-contentful-paint-element"]
+  ?.details?.items?.[0]?.items?.[0]?.node?.selector;
+console.log("LCP element:", el || "unknown");
 console.log(fail.length ? "REGRESSION: "+fail.join("; ") : "within budget");
 process.exit(fail.length ? 1 : 0);'
 ```
