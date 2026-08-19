@@ -237,24 +237,21 @@ Replace lines 1–21 (everything from `:root {` through the closing `}`) with:
   --shadow-hover: 0 18px 38px -14px rgb(0 0 0 / 0.75);
   --dur: 250ms;
   --container: 1040px;
+  --container-prose: 760px;
 }
 ```
 
-Note `--container` grows from 760px to 1040px: the hero is now two columns and needs the width.
+`--container` grows from 760px to 1040px because the hero becomes two columns.
+`--container-prose` keeps the old measure for case-study pages, whose header would
+otherwise strand — a 147px `h1` inside a 1000px box reads as an unfinished layout.
+Task 7 applies it; only define it here.
 
-- [ ] **Step 3: Add a mono utility and a kicker restyle to `src/styles/global.css`**
+- [ ] **Step 3: Add the section-label utility to `src/styles/global.css`**
 
-Append to the end of the file:
+Append to the end of the file. Only this one class — a general `.mono` helper was tried
+and removed as dead code, because every consumer below declares its own mono properties.
 
 ```css
-/* Mono microtype: kickers, years, counts, file labels */
-.mono {
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
-
 /* Section numbering used by home sections */
 .section-label {
   font-family: var(--font-mono);
@@ -286,15 +283,40 @@ import Footer from '../components/Footer.astro';
 Only Fraunces 600 stays preloaded — it renders the hero headline, which is the LCP text.
 Preloading more would compete with the hero image for bandwidth.
 
-- [ ] **Step 5: Run the contrast gate**
+- [ ] **Step 5: Keep the stylesheet inlined**
+
+Adding three `@font-face` blocks grows the `BaseLayout` CSS chunk to ~4.7KB. Astro's
+default `build.inlineStylesheets: 'auto'` only inlines under **4096 bytes**, so the build
+silently flips to an external `<link rel="stylesheet">` — a render-blocking round trip on
+every page. Measured cost when this happened: **LCP 1052ms → 1503ms (+43%)**, FCP +50%,
+while the Lighthouse Performance score still rounded to 100.
+
+Add to `astro.config.mjs` inside `defineConfig({...})`:
+
+```js
+  // The stylesheet is ~4.7KB, just over Astro's 4KB auto-inline threshold. Letting it go
+  // external costs a render-blocking round trip on every page (measured: LCP +43%).
+  // Inlining always is the better trade for a 5-page static site.
+  build: { inlineStylesheets: 'always' },
+```
+
+Verify:
+
+```bash
+npm run build
+grep -c '<link rel="stylesheet"' dist/index.html || echo 0   # must be 0
+ls dist/_astro/*.css 2>/dev/null | wc -l                     # must be 0
+```
+
+- [ ] **Step 6: Run the contrast gate**
 
 Run: `npm test -- tests/contrast.spec.ts`
 Expected: PASS — both tests. If any pair reports below 4.5, fix the token, do not lower the threshold.
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 7: Commit**
 
 ```bash
-git add package.json package-lock.json src/styles/global.css src/layouts/BaseLayout.astro
+git add package.json package-lock.json src/styles/global.css src/layouts/BaseLayout.astro astro.config.mjs
 git commit -m "feat(design): dark editorial tokens, Inter and JetBrains Mono"
 ```
 
@@ -1041,10 +1063,19 @@ Replace the `<style>` block with:
 </style>
 ```
 
-- [ ] **Step 4: Retune the case-study prose for dark**
+- [ ] **Step 4: Retune the case-study prose for dark and stop the header stranding**
 
-In `src/layouts/CaseStudyLayout.astro`, change these declarations inside the existing
-`<style>` block, leaving everything else intact:
+`--container` is now 1040px for the sake of the home hero, which leaves the case-study
+header floating in a 1000px box — the tenantiq `h1` fills 147px of it. Narrow this page
+back to the prose measure by adding to `CaseStudyLayout.astro`'s `<style>`:
+
+```css
+  main.container {
+    max-width: var(--container-prose);
+  }
+```
+
+Then change these declarations inside the same `<style>` block, leaving everything else intact:
 
 ```css
   .prose :global(a) {
@@ -1418,9 +1449,25 @@ for(const k of ["largest-contentful-paint","cumulative-layout-shift","total-bloc
 lsof -tiTCP:4399 -sTCP:LISTEN | xargs kill
 ```
 
-Baseline to hold or beat: **Performance 100, LCP 1.1s, CLS 0.** The hero image is now
-above the fold; if LCP regresses, check that it is not lazy-loaded and that `width`/`height`
-are set before changing anything else.
+**Do not judge this on the category score alone.** A 43% LCP regression already happened
+once during this project while Performance still rounded to 100. Assert the metrics:
+
+```bash
+node -e '
+const r=require("/tmp/lh-redesign.json");
+const lcp=r.audits["largest-contentful-paint"].numericValue;
+const cls=r.audits["cumulative-layout-shift"].numericValue;
+const fail=[];
+if (lcp > 1400) fail.push(`LCP ${Math.round(lcp)}ms > 1400ms budget`);
+if (cls > 0.01) fail.push(`CLS ${cls} > 0.01`);
+console.log(fail.length ? "REGRESSION: "+fail.join("; ") : "within budget");
+process.exit(fail.length ? 1 : 0);'
+```
+
+Baseline to hold or beat: **Performance 100, LCP ~1.1s, CLS 0.** Budget is 1400ms to allow
+normal run-to-run noise while still catching a real regression. If LCP breaches it, check
+in this order: is the stylesheet still inlined (`ls dist/_astro/*.css` must be empty), is
+the hero image non-lazy with explicit dimensions, and did a new font weight get added.
 
 - [ ] **Step 4: Check both viewports for overflow**
 
