@@ -80,6 +80,6 @@ test('the site ships a dark theme', async ({ page }) => {
     getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()
   );
   // Not pinned to an exact hex: the guarantee is "dark", so aesthetic tweaks stay free.
-  // The light theme this replaced was #faf9f6, luminance ~0.93.
+  // The light theme this replaced was #faf9f6, luminance ~0.95.
   expect(luminance(bg), `--bg is ${bg}, which is not dark`).toBeLessThan(0.05);
 });
