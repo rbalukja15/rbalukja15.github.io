@@ -1,23 +1,30 @@
 :root {
-  --bg: #faf9f6;
-  --surface: #ffffff;
-  --surface-alt: #f5f3ee;
-  --ink: #111214;
-  --ink-soft: #55575c;
-  --ink-faint: #696c72;
-  --accent: #1d4ed8;
-  --border: #e5e3dc;
-  --border-strong: #d8d5cc;
-  --chip-bg: #f1efe9;
+  --bg: #100f0d;
+  --surface: #17140f;
+  --surface-alt: #0d0c0a;
+  --ink: #f4f1ea;
+  --ink-soft: #a89e90;
+  /* #7d7264 was the first choice and measured 4.07:1 on --bg — below AA.
+     Do not darken this without re-running tests/contrast.spec.ts. */
+  --ink-faint: #8a7f70;
+  --accent: #d98a3d;
+  --border: #221f1a;
+  --border-strong: #2a251d;
+  --chip-bg: #221d16;
+
+  --status-live: #5cb87f;
+  --status-oss: #d98a3d;
+  --status-npm: #c98bdb;
 
   --font-serif: 'Fraunces', Georgia, 'Times New Roman', serif;
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --radius: 8px;
-  --shadow-hover: 0 12px 24px -8px rgb(17 18 20 / 0.18);
+  --shadow-hover: 0 18px 38px -14px rgb(0 0 0 / 0.75);
   --dur: 250ms;
-  --container: 760px;
+  --container: 1040px;
 }
 
 * {
@@ -135,4 +142,22 @@ img {
     transition: none !important;
     animation: none !important;
   }
+}
+
+/* Mono microtype: kickers, years, counts, file labels */
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* Section numbering used by home sections */
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 0.7rem;
 }
