@@ -52,7 +52,11 @@ Three items are unresolved on purpose. Each has a task; none may be silently gue
 
 1. **The hero headline is a placeholder.** "Multi-tenant systems that don't leak." was written by Claude. Task 12 blocks launch on Romarjo rewriting it.
 2. **The vetapp migration count is unverified.** The site says 52; the repo has 45 files. Task 10 removes the claim rather than publishing an unbacked number.
-3. **Employer naming is unconfirmed.** `src/data/experience.ts` names "Ritech International AG — client: eos.uptrade (Siemens Mobility)" and Deutsche Bahn / BVG / SSB, while the 2026-07-05 spec §11 required that employer stay anonymous. Task 12 asks Romarjo to confirm. **Do not edit `src/data/experience.ts` in any other task.**
+3. ~~**Employer naming is unconfirmed.**~~ **RESOLVED — no action needed.** Commit
+   `15eb099` (2026-07-29, authored by Romarjo) deliberately replaced "Public-transport
+   e-ticketing company" with the real names, reasoning that the anonymous form "read as
+   unverifiable". That decision supersedes the 2026-07-05 spec §11 anonymity rule.
+   **`src/data/experience.ts` is correct as it stands — do not edit it in any task.**
 
 ---
 
@@ -66,19 +70,27 @@ Locks the palette before any of it is written. This test is the reason the plan 
 
 - [ ] **Step 1: Write the failing test**
 
+Two properties matter and they are different: the palette must clear WCAG AA, and the
+theme must actually be dark. The parser fails **closed** — a gate that cannot read a
+colour must break loudly, because `NaN < 4.5` is `false` and would otherwise let a bad
+palette through silently.
+
 ```ts
 // tests/contrast.spec.ts
 import { test, expect } from '@playwright/test';
 
-/** WCAG 2.1 relative luminance for a #rrggbb string. */
+/** WCAG 2.1 relative luminance for a #rrggbb string. Throws on anything else. */
 function luminance(hex: string): number {
+  const value = hex.trim().replace('#', '');
+  // Fail closed: an unparseable colour must break the gate, never skip a pair.
+  if (!/^[0-9a-fA-F]{6}$/.test(value)) {
+    throw new Error(`expected a 6-digit hex colour, got "${hex}"`);
+  }
   const channel = (c: number) => {
     const s = c / 255;
     return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
   };
-  const parts = hex.replace('#', '').match(/.{2}/g);
-  if (!parts) throw new Error(`not a hex colour: ${hex}`);
-  const [r, g, b] = parts.map((h) => parseInt(h, 16));
+  const [r, g, b] = (value.match(/.{2}/g) as string[]).map((h) => parseInt(h, 16));
   return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
 }
 
@@ -89,52 +101,85 @@ function contrast(a: string, b: string): number {
   return (hi + 0.05) / (lo + 0.05);
 }
 
-test('token palette meets WCAG AA for body text', async ({ page }) => {
+test.beforeEach(async ({ page }) => {
   await page.goto('/');
-  const t = await page.evaluate(() => {
+});
+
+test('token palette meets WCAG AA for body text', async ({ page }) => {
+  const tokens = await page.evaluate(() => {
     const s = getComputedStyle(document.documentElement);
     const get = (name: string) => s.getPropertyValue(name).trim();
     return {
       bg: get('--bg'),
       surface: get('--surface'),
+      surfaceAlt: get('--surface-alt'),
       ink: get('--ink'),
       inkSoft: get('--ink-soft'),
       inkFaint: get('--ink-faint'),
       accent: get('--accent'),
+      statusLive: get('--status-live'),
+      statusOss: get('--status-oss'),
+      statusNpm: get('--status-npm'),
     };
   });
 
-  // Every pair that carries real text. 4.5:1 is the AA minimum for body copy.
-  const pairs: Array<[string, string, string]> = [
-    ['--ink on --bg', t.ink, t.bg],
-    ['--ink-soft on --bg', t.inkSoft, t.bg],
-    ['--ink-faint on --bg', t.inkFaint, t.bg],
-    ['--ink-soft on --surface', t.inkSoft, t.surface],
-    ['--ink-faint on --surface', t.inkFaint, t.surface],
-    ['--accent on --bg', t.accent, t.bg],
+  // A renamed or deleted token must break the gate, not quietly drop a pair.
+  for (const [name, value] of Object.entries(tokens)) {
+    expect(value, `token ${name} is missing from :root`).not.toBe('');
+  }
+
+  // Every foreground against every background it actually sits on. --surface-alt is the
+  // darkest of the three (Skills and the footer use it) and was the easiest to forget.
+  const backgrounds: Array<[string, string]> = [
+    ['--bg', tokens.bg],
+    ['--surface', tokens.surface],
+    ['--surface-alt', tokens.surfaceAlt],
+  ];
+  const foregrounds: Array<[string, string]> = [
+    ['--ink', tokens.ink],
+    ['--ink-soft', tokens.inkSoft],
+    ['--ink-faint', tokens.inkFaint],
+    ['--accent', tokens.accent],
   ];
 
+  const pairs: Array<[string, string, string]> = [];
+  for (const [fgName, fg] of foregrounds) {
+    for (const [bgName, bg] of backgrounds) {
+      pairs.push([`${fgName} on ${bgName}`, fg, bg]);
+    }
+  }
+  // Status pills render as text on card surfaces — spec §8 calls these highest-risk.
+  pairs.push(['--status-live on --surface', tokens.statusLive, tokens.surface]);
+  pairs.push(['--status-oss on --surface', tokens.statusOss, tokens.surface]);
+  pairs.push(['--status-npm on --surface', tokens.statusNpm, tokens.surface]);
+
   const failures = pairs
-    .map(([name, fg, bgc]) => ({ name, ratio: contrast(fg, bgc) }))
+    .map(([name, fg, bg]) => ({ name, ratio: contrast(fg, bg) }))
     .filter((r) => r.ratio < 4.5)
     .map((r) => `${r.name} = ${r.ratio.toFixed(2)}`);
 
   expect(failures, `below 4.5:1 — ${failures.join(', ')}`).toEqual([]);
 });
 
-test('page background is the dark token', async ({ page }) => {
-  await page.goto('/');
+test('the site ships a dark theme', async ({ page }) => {
   const bg = await page.evaluate(() =>
     getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()
   );
-  expect(bg.toLowerCase()).toBe('#100f0d');
+  // Not pinned to an exact hex: the guarantee is "dark", so aesthetic tweaks stay free.
+  // The light theme this replaced was #faf9f6, luminance ~0.93.
+  expect(luminance(bg), `--bg is ${bg}, which is not dark`).toBeLessThan(0.05);
 });
 ```
+
+All 15 pairs were pre-verified against the Task 2 palette. Thinnest margin is
+`--ink-faint on --surface` at **4.68**. This gate is achievable, not aspirational.
 
 - [ ] **Step 2: Run it and watch it fail**
 
 Run: `npm test -- tests/contrast.spec.ts`
-Expected: FAIL — the second test fails because `--bg` is still `#faf9f6`. (The first test may pass on the current light palette; that is fine, it is guarding the new one.)
+Expected: FAIL. Both tests should be red — the palette test because `--status-*` do not
+exist yet (Task 2 adds them), and the dark-theme test because `--bg` is still `#faf9f6`.
+Confirm the failure names the missing tokens; a syntax error is not a valid red.
 
 - [ ] **Step 3: Commit the failing gate**
 
@@ -1431,12 +1476,13 @@ merge to a live site until they are answered.**
   Romarjo knows the migrations were squashed, a corrected figure can go back in. Otherwise
   it stays out.
 
-- [ ] **Gate 3 — employer naming.** `src/data/experience.ts` names "Ritech International AG
-  — client: eos.uptrade (Siemens Mobility)" and Deutsche Bahn, BVG Berlin and SSB
-  Stuttgart. The 2026-07-05 spec §11 required that employer stay anonymous, "as in the
-  CV". Later CV advice suggested naming the employer while anonymising the client. These
-  conflict, the data file currently does both, and it is published live right now.
-  Romarjo decides; only then may `src/data/experience.ts` be edited.
+- [x] **Gate 3 — employer naming. RESOLVED, already decided.** Commit `15eb099`
+  (2026-07-29) shows Romarjo deliberately naming Ritech International AG and eos.uptrade
+  (Siemens Mobility), because the anonymous phrasing "read as unverifiable". The spec §11
+  anonymity rule is superseded by that later decision. One nuance worth a glance but not
+  a blocker: the commit also names the end clients (Deutsche Bahn, BVG Berlin, SSB
+  Stuttgart), which goes further than the CV advice of "name your entity, anonymise the
+  client". It is his published call and has been live since July. Leave it alone.
 
 ---
 
