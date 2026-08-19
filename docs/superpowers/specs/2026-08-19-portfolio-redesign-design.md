@@ -66,7 +66,7 @@ Replaces the palette in `src/styles/global.css`. Warm ink, not blue-black.
 | `--surface-alt` | `#0d0c0a` | alternating bands |
 | `--ink` | `#f4f1ea` | headings, primary text |
 | `--ink-soft` | `#a89e90` | body |
-| `--ink-faint` | `#7d7264` | captions, meta |
+| `--ink-faint` | `#8a7f70` | captions, meta |
 | `--accent` | `#d98a3d` | amber — kickers, links, the italic hero word |
 | `--border` | `#221f1a` | hairlines |
 | `--border-strong` | `#2a251d` | card and image edges |
@@ -74,7 +74,21 @@ Replaces the palette in `src/styles/global.css`. Warm ink, not blue-black.
 | status: live | `#5cb87f` | "IN DAILY PRODUCTION" |
 | status: npm | `#c98bdb` | "PUBLISHED ON NPM" |
 
-Every value in §4.2 is provisional until measured — see §8.
+**Measured 2026-08-19** (WCAG 2.1 relative luminance, all against `--bg` unless noted):
+
+| Pair | Ratio | |
+| --- | --- | --- |
+| `--ink` on `--bg` | 16.98 | pass |
+| `--ink-soft` on `--bg` | 7.26 | pass |
+| `--ink-faint` on `--bg` | 4.88 | pass |
+| `--ink-faint` on `--surface` | 4.68 | pass |
+| `--accent` on `--bg` | 6.98 | pass |
+| status live on `--surface` | 7.54 | pass |
+| status npm on `--surface` | 7.17 | pass |
+
+`--ink-faint` was originally specced as `#7d7264` and **failed at 4.07 / 3.90** — the same
+token that has failed in this repo before. It is now `#8a7f70`. The margin on `--surface`
+is 0.18; a permanent contrast test (§9) guards it against future drift.
 
 ### 4.3 Typography
 
