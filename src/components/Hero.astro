@@ -27,12 +27,12 @@ const headlineAccent = "don't leak";
       <img
         src="/images/tenantiq/ask-hero.webp"
         srcset="/images/tenantiq/ask-hero-640.webp 640w, /images/tenantiq/ask-hero-900.webp 900w, /images/tenantiq/ask-hero.webp 1200w"
-        sizes="(max-width: 820px) 92vw, 55vw"
+        sizes="(max-width: 820px) 92vw, (max-width: 1080px) 55vw, 547px"
         width="1200"
         height="573"
         decoding="async"
         fetchpriority="high"
-        alt="TenantIQ answering a question about a contract, with each claim carrying a numbered citation that resolves to the source passage."
+        alt="The TenantIQ ask screen: a question, a streamed answer with numbered citation markers, and a side panel showing the source passages those markers point to."
       />
       <figcaption>
         TenantIQ — every answer scoped to one workspace, every claim carrying the passage
@@ -40,6 +40,15 @@ const headlineAccent = "don't leak";
       </figcaption>
     </figure>
   </div>
+  <!--
+    These four figures are published claims and must stay reproducible from a clone.
+    Counted 2026-08-19 from ~/Desktop/tenantiq:
+      621 = 336 backend test functions (backend/tests) + 285 frontend test cases (frontend/tests)
+      17  = docs/adr/*.md excluding 0000-template.md
+      2   = the scoped ORM manager and Postgres row-level security
+      1   = vetapp, in daily production
+    Re-measure before changing them; see Task 8 of the redesign plan.
+  -->
   <div class="evidence">
     <div class="container evidence-row">
       <span>621 automated tests</span>
@@ -118,6 +127,11 @@ const headlineAccent = "don't leak";
     margin-top: 3.5rem;
     background: var(--surface-alt);
   }
+  /* Source of a small intermittent CLS (~0.0165): at <=900px these four spans sit on a
+     flex-wrap boundary, and the generic monospace fallback is 24-52px wider per item than
+     JetBrains Mono, so the row can change height when the font swaps in. Measured, not
+     guessed. Left as-is: well under Google's 0.1 "good" threshold, and it does not move
+     the Performance score. */
   .evidence-row {
     display: flex;
     flex-wrap: wrap;
