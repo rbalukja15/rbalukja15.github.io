@@ -14,11 +14,19 @@ test('renders all six home sections', async ({ page }) => {
 });
 
 test('hero states title and positioning', async ({ page }) => {
-  await expect(page.locator('#hero .kicker')).toHaveText(
-    'Senior Software Engineer · Full-Stack & DevOps'
+  await expect(page.locator('#hero .section-label')).toHaveText(
+    'Multi-tenant B2B SaaS · Access control'
   );
   await expect(page.locator('#hero h1')).toBeVisible();
   await expect(page.locator('#hero')).toContainText('7+ years');
+});
+
+test('hero image is eager and dimensioned so it cannot hurt LCP or CLS', async ({ page }) => {
+  const img = page.locator('#hero img');
+  await expect(img).toHaveAttribute('width', '1200');
+  await expect(img).toHaveAttribute('height', '573');
+  // Above the fold: lazy-loading it would delay the largest paint.
+  await expect(img).not.toHaveAttribute('loading', 'lazy');
 });
 
 test('skills renders six groups, no progress bars', async ({ page }) => {

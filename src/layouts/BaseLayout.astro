@@ -1,6 +1,7 @@
 ---
 import '@fontsource/fraunces/latin-600.css';
-import '@fontsource/fraunces/latin-700.css';
+// Fraunces 700 is deliberately NOT loaded: its only consumer was the below-fold card
+// monogram, and the extra 18KB cost 302ms of LCP. ProjectCard uses weight 600 instead.
 import '@fontsource/inter/latin-400.css';
 import '@fontsource/inter/latin-600.css';
 import '@fontsource/jetbrains-mono/latin-400.css';

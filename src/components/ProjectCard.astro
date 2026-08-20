@@ -64,7 +64,9 @@ const { title, bullets, stack, thumbnail, links } = project.data;
     color: var(--accent);
     font-family: var(--font-serif);
     font-size: 3rem;
-    font-weight: 700;
+    /* 600, not 700: the 700 face is not loaded (see BaseLayout) and asking for it
+       would trigger synthetic bold. */
+    font-weight: 600;
   }
   .body {
     padding: 1.1rem 1.25rem 1.25rem;
