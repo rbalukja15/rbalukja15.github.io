@@ -530,7 +530,7 @@ const headlineAccent = "don't leak";
       <img
         src="/images/tenantiq/ask-hero.webp"
         srcset="/images/tenantiq/ask-hero-640.webp 640w, /images/tenantiq/ask-hero-900.webp 900w, /images/tenantiq/ask-hero.webp 1200w"
-        sizes="(max-width: 820px) 92vw, 55vw"
+        sizes="(max-width: 820px) 92vw, (max-width: 1080px) 55vw, 547px"
         width="1200"
         height="573"
         decoding="async"
@@ -660,7 +660,10 @@ measurement. Two changes, both measured, brought it back to **1654ms**:
        .toFile(`public/images/tenantiq/ask-hero-${w}.webp`);
      console.log(w, i.width+"x"+i.height, Math.round(i.size/1024)+"KB")});'
    ```
-   Worth 2102ms → 1956ms.
+   Worth 2102ms → 1956ms. **Note the `sizes` breakpoints matter:** above ~1080px the
+   1040px `--container` caps the image at a constant 547px, so a bare `55vw` keeps
+   scaling and makes desktop browsers fetch the 900w file for a 547px slot. Verified
+   after the fix: 390px→640w, 820px→900w, 1440px→640w.
 
 2. **Drop the Fraunces 700 face.** Its only consumer is `ProjectCard`'s `.monogram`,
    which is below the fold, and the extra 18KB competing for bandwidth cost **302ms**.
