@@ -1440,7 +1440,14 @@ cat scripts/generate-og.mjs
 
 It renders an HTML string with Playwright and screenshots it at 1200×630.
 
-- [ ] **Step 2: Update the template's colours**
+- [ ] **The template's TEXT is stale too, not just its colours.** It still reads
+`SENIOR SOFTWARE ENGINEER · FULL-STACK & DEVOPS` and `I build products end to end.` The
+card must say what the hero says. So must `<meta name="description">` in `index.astro` and
+`og:image:alt` in `BaseLayout.astro` — the description is what LinkedIn prints beneath the
+card title and what Google shows in results, so leaving it stale contradicts the whole
+repositioning.
+
+**Step 2: Update the template's colours and text**
 
 In the inline HTML/CSS inside `scripts/generate-og.mjs`, change the palette to match
 `global.css`: background `#100f0d`, heading `#f4f1ea`, supporting text `#a89e90`, and one
