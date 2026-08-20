@@ -46,7 +46,7 @@ The trickiest domain logic is pack pricing. Products are bought in packs (a 20 k
 
 ## Testing & quality
 
-366 backend tests and 92 Playwright end-to-end tests across 32 spec files. The e2e suite drives the real dockerized stack: it logs in, fills the forms, collects payments, receives purchase orders. No mocked backend. CI runs all of it on every push — pytest against real Postgres and Redis, lint, a production build, the e2e suite, and a check that fails if the English and Albanian translation files ever drift apart. 52 migrations and 18 tagged releases in four months. Everything goes through an adversarial review pass before merging; that habit has caught bugs as subtle as a stored Decimal comparing unequal to its own re-submitted form value.
+302 backend test functions and 177 Playwright end-to-end tests across 54 spec files. The e2e suite drives the real dockerized stack: it logs in, fills the forms, collects payments, receives purchase orders. No mocked backend. CI runs all of it on every push — pytest against real Postgres and Redis, lint, a production build, the e2e suite, and a check that fails if the English and Albanian translation files ever drift apart. 29 tagged releases so far. Everything goes through an adversarial review pass before merging; that habit has caught bugs as subtle as a stored Decimal comparing unequal to its own re-submitted form value.
 
 ## Outcome
 
