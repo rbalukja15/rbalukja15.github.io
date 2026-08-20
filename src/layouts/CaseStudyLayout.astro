@@ -101,8 +101,14 @@ const { title, tagline, context, stack, links, isPrivate } = project.data;
     border-radius: var(--radius);
     margin: 1rem 0;
   }
+  /* Break out of the 65ch prose measure. Screenshots are the product evidence — at the
+     reading width they render ~656px (55% scale) and secondary UI text drops to ~9px.
+     Viewport units are required here: a percentage would just re-inherit the prose cap. */
   .prose :global(figure.shot) {
     margin: 1.5rem 0;
+    width: min(880px, calc(100vw - 2.5rem));
+    margin-left: 50%;
+    transform: translateX(-50%);
   }
   .prose :global(figure.shot img) {
     width: 100%;
