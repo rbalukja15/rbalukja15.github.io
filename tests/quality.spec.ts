@@ -71,10 +71,20 @@ test('hero is painted immediately, never behind the reveal', async ({ page }) =>
 
 test('the featured project card is painted immediately too', async ({ page }) => {
   await page.goto('/');
-  // First card sits above the fold on desktop; gating it re-creates the empty-viewport bug.
   const featured = page.locator('#projects .featured');
   await expect(featured).toHaveCount(1);
-  await expect(featured.locator('..')).not.toHaveClass(/reveal/);
+  // Descendant check, not a parent-axis one: `.locator('..')` walks exactly one level, so
+  // wrapping the card in any intervening div would let the bug back in while still passing.
+  await expect(page.locator('#projects .reveal .featured')).toHaveCount(0);
+});
+
+test('the non-featured cards still reveal on scroll', async ({ page }) => {
+  await page.goto('/');
+  // The other half of the contract: un-gating the featured card must not disable the
+  // animation for the pair below it.
+  const pair = page.locator('#projects .pair');
+  await pair.scrollIntoViewIfNeeded();
+  await expect(page.locator('#projects .reveal').first()).toHaveClass(/is-visible/);
 });
 
 test('reduced motion shows everything without scrolling', async ({ page }) => {
