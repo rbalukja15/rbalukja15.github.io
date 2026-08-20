@@ -62,6 +62,21 @@ test('home sections reveal on scroll', async ({ page }) => {
   await expect(skills.locator('.reveal').first()).toHaveClass(/is-visible/);
 });
 
+test('hero is painted immediately, never behind the reveal', async ({ page }) => {
+  await page.goto('/');
+  // The hero is the reason this redesign exists: it must never start invisible.
+  await expect(page.locator('#hero .reveal')).toHaveCount(0);
+  await expect(page.locator('#hero h1')).toHaveCSS('opacity', '1');
+});
+
+test('the featured project card is painted immediately too', async ({ page }) => {
+  await page.goto('/');
+  // First card sits above the fold on desktop; gating it re-creates the empty-viewport bug.
+  const featured = page.locator('#projects .featured');
+  await expect(featured).toHaveCount(1);
+  await expect(featured.locator('..')).not.toHaveClass(/reveal/);
+});
+
 test('reduced motion shows everything without scrolling', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');

@@ -20,10 +20,11 @@ const [featured, ...rest] = projects;
     <Hero />
     <section id="projects" class="section">
       <div class="container">
+        <p class="section-label">01 &middot; Selected work</p>
+        <h2>Three systems, three problems.</h2>
+        <p class="sub">Each opens a full case study.</p>
+        <ProjectCard project={featured} featured />
         <Reveal>
-          <h2>Selected work</h2>
-          <p class="sub">Each opens a full case study.</p>
-          <ProjectCard project={featured} featured />
           <div class="pair">
             {rest.map((p) => <ProjectCard project={p} />)}
           </div>
@@ -37,23 +38,24 @@ const [featured, ...rest] = projects;
 
 <style>
   #projects h2 {
-    font-size: 1.375rem;
-    margin-bottom: 0.25rem;
+    font-size: clamp(1.5rem, 3vw, 1.95rem);
+    letter-spacing: -0.02em;
+    margin-bottom: 0.3rem;
   }
   .sub {
     color: var(--ink-faint);
-    font-size: 0.85rem;
-    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+    margin-bottom: 1.75rem;
   }
   #projects :global(.featured) {
-    margin-bottom: 1rem;
+    margin-bottom: 1.1rem;
   }
   .pair {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    gap: 1.1rem;
   }
-  @media (max-width: 640px) {
+  @media (max-width: 760px) {
     .pair {
       grid-template-columns: 1fr;
     }
