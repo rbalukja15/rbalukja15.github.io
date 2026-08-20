@@ -1363,7 +1363,19 @@ find backend -path '*/migrations/[0-9]*.py' | wc -l
 cd ~/Desktop/rbalukja15.github.io
 ```
 
-Expected on 2026-08-19: `302`, `177`, `54`, `45`.
+Measured 2026-08-20: `302` backend test functions, `177` e2e cases across `54` spec files,
+`45` migration files, `29` tags (latest `v1.10.1`), `22` models, `26` Next.js pages.
+
+**A full sweep of this file found two more published figures that do not reproduce**, both
+outside the paragraph this task was originally scoped to:
+- "Inventory across twelve product categories" — `CATEGORY_CHOICES` has **10**
+  (`backend/inventory/models.py:44-55`).
+- "22 API viewsets" — `router.register(` across the deduped `backend/**/urls.py` totals **21**.
+
+Both were corrected. The lesson generalises: when one number in a document is stale, sweep
+every countable claim in it rather than fixing only the one you were sent for. vetapp being
+a private repo means nobody can click through to catch these, which raises the bar rather
+than lowering it.
 
 - [ ] **Step 2: Replace the counts sentence in "Testing & quality"**
 
@@ -1386,7 +1398,8 @@ Find `52 migrations and 18 tagged releases in four months.` and replace it with:
 
 The migration count is dropped, not corrected: the site claimed 52 and the repo has 45
 files, and migration files do not decrease unless they were squashed. Publishing either
-number would be asserting something neither of us can reproduce. See the Gates section.
+number would assert something neither of us can reproduce, so the claim is removed
+silently — no note in the published copy. See Gate 2; only Romarjo can resolve it.
 
 - [ ] **Step 4: Add the status field**
 
