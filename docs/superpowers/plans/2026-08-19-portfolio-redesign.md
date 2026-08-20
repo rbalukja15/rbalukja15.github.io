@@ -754,8 +754,14 @@ Replace the `<main>` block with:
   </main>
 ```
 
-The featured card sits outside `<Reveal>` so the first card is painted with the hero;
-only the two-up row animates in.
+The featured card sits outside `<Reveal>` so it is painted with the hero; only the two-up
+row animates in.
+
+**Measured caveat, so nobody over-claims this later:** at 1280×900 the featured card is
+69% below the fold (only the top of its thumbnail shows), and at 390×844 it is entirely
+below the fold. Un-gating it is still correct — it removes an opacity/transform animation
+from an element that is at rest on first paint — but the "first viewport is no longer
+mostly empty" win comes almost entirely from the hero, not from this card.
 
 - [ ] **Step 4: Update the styles in the same file**
 
