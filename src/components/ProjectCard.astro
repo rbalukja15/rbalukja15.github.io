@@ -7,7 +7,14 @@ interface Props {
 }
 
 const { project, featured = false } = Astro.props;
-const { title, bullets, stack, thumbnail, links } = project.data;
+const { title, bullets, stack, thumbnail, links, status } = project.data;
+
+const STATUS: Record<string, { label: string; tone: string }> = {
+  production: { label: 'In daily production', tone: 'live' },
+  'open-source': { label: 'Open source', tone: 'oss' },
+  npm: { label: 'Published on npm', tone: 'npm' },
+};
+const badge = status ? STATUS[status] : null;
 ---
 <article class:list={['card', { featured }]}>
   {thumbnail ? (
@@ -16,6 +23,7 @@ const { title, bullets, stack, thumbnail, links } = project.data;
     <div class="monogram" aria-hidden="true">{title.charAt(0)}</div>
   )}
   <div class="body">
+    {badge && <span class:list={['status', badge.tone]}>{badge.label}</span>}
     <h3>{title}</h3>
     <ul>
       {bullets.map((b) => <li>{b}</li>)}
@@ -103,5 +111,30 @@ const { title, bullets, stack, thumbnail, links } = project.data;
   }
   .links a {
     padding-block: 0.25rem;
+  }
+  .status {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    margin-bottom: 0.6rem;
+  }
+  .status.live {
+    color: var(--status-live);
+    border: 1px solid color-mix(in srgb, var(--status-live) 34%, transparent);
+    background: color-mix(in srgb, var(--status-live) 10%, transparent);
+  }
+  .status.oss {
+    color: var(--status-oss);
+    border: 1px solid color-mix(in srgb, var(--status-oss) 34%, transparent);
+    background: color-mix(in srgb, var(--status-oss) 10%, transparent);
+  }
+  .status.npm {
+    color: var(--status-npm);
+    border: 1px solid color-mix(in srgb, var(--status-npm) 34%, transparent);
+    background: color-mix(in srgb, var(--status-npm) 10%, transparent);
   }
 </style>

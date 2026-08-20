@@ -9,6 +9,7 @@ bullets:
 stack: [React, TypeScript, Django REST, PostgreSQL, Playwright]
 order: 3
 isPrivate: true
+status: production
 ---
 
 ## Problem

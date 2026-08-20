@@ -10,6 +10,7 @@ stack: [Django REST, Next.js, PostgreSQL, pgvector]
 order: 1
 links:
   github: https://github.com/rbalukja15/tenantiq
+status: open-source
 ---
 
 ## Problem

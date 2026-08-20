@@ -11,6 +11,7 @@ links:
   github: https://github.com/rbalukja15/react-ui-kit
   live: https://rbalukja15.github.io/react-ui-kit/
   liveLabel: Storybook
+status: npm
 ---
 
 ## Problem
