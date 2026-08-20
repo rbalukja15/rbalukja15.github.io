@@ -18,7 +18,7 @@ A working veterinary clinic was running on paper and spreadsheets. Stock was cou
 
 ## What I built
 
-Clients and pets with full medical histories: vaccinations, antiparasite treatments, medications, illnesses. Appointments with a calendar. Invoices with discounts, tax, PDF export, and payment tracking. Inventory across twelve product categories, with a stock-take workflow. Purchase orders with a supplier ledger that is append-only, so the debt history can't be quietly edited. Per-user permissions for admins, vets, and reception. An audit log of every change. Email reminders for tomorrow's appointments, vaccinations coming due, and overdue invoices. It comes out to 22 Django models, 22 API viewsets, and 26 pages of Next.js frontend.
+Clients and pets with full medical histories: vaccinations, antiparasite treatments, medications, illnesses. Appointments with a calendar. Invoices with discounts, tax, PDF export, and payment tracking. Inventory across ten product categories, with a stock-take workflow. Purchase orders with a supplier ledger that is append-only, so the debt history can't be quietly edited. Per-user permissions for admins, vets, and reception. An audit log of every change. Email reminders for tomorrow's appointments, vaccinations coming due, and overdue invoices. It comes out to 22 Django models, 21 API viewsets, and 26 pages of Next.js frontend.
 
 <figure class="shot">
   <img src="/images/vetapp/dashboard.webp" width="1200" height="670" loading="lazy" decoding="async" alt="VetApp dashboard with summary cards for clients, today's appointments, month-to-date revenue, low stock and outstanding invoices, a list of upcoming appointments, and a vaccinations-due panel." />
