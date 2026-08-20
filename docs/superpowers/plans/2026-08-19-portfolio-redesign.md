@@ -874,7 +874,12 @@ interface Props {
 const { project, featured = false } = Astro.props;
 const { title, bullets, stack, thumbnail, links, status } = project.data;
 
-const STATUS: Record<string, { label: string; tone: string }> = {
+// Keyed by the schema's own union, not `string`: with a plain Record<string, ...> a new
+// status added to content.config.ts silently renders no pill at all — no error from
+// astro check or the build. This makes the compiler catch it instead.
+type Status = NonNullable<CollectionEntry<'projects'>['data']['status']>;
+
+const STATUS: Record<Status, { label: string; tone: string }> = {
   production: { label: 'In daily production', tone: 'live' },
   'open-source': { label: 'Open source', tone: 'oss' },
   npm: { label: 'Published on npm', tone: 'npm' },
