@@ -42,8 +42,9 @@ const headlineAccent = "don't leak";
   </div>
   <!--
     These four figures are published claims and must stay reproducible from a clone.
-    Counted 2026-08-19 from ~/Desktop/tenantiq:
-      621 = 336 backend test functions (backend/tests) + 285 frontend test cases (frontend/tests)
+    Counted 2026-08-20 from ~/Desktop/tenantiq (it moved since 2026-08-19 — re-measure, do
+    not trust this comment blindly):
+      662 = 377 backend test functions (backend/tests) + 285 frontend test cases (frontend/tests)
       17  = docs/adr/*.md excluding 0000-template.md
       2   = the scoped ORM manager and Postgres row-level security
       1   = vetapp, in daily production
@@ -51,7 +52,7 @@ const headlineAccent = "don't leak";
   -->
   <div class="evidence">
     <div class="container evidence-row">
-      <span>621 automated tests</span>
+      <span>662 automated tests</span>
       <span>17 architecture decision records</span>
       <span>2 independent isolation layers</span>
       <span>1 system in daily production</span>

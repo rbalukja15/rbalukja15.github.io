@@ -545,7 +545,7 @@ const headlineAccent = "don't leak";
   </div>
   <div class="evidence">
     <div class="container evidence-row">
-      <span>621 automated tests</span>
+      <span>662 automated tests</span>
       <span>17 architecture decision records</span>
       <span>2 independent isolation layers</span>
       <span>1 system in daily production</span>
@@ -1220,7 +1220,10 @@ ls docs/adr/[0-9]*.md | grep -v 0000-template | wc -l
 cd ~/Desktop/rbalukja15.github.io
 ```
 
-Expected on 2026-08-19: `336`, `285`, `17`. If they differ, use what you measure — never the numbers written here.
+Measured 2026-08-19: `336`, `285`, `17`. **Re-measured 2026-08-20: `377`, `285`, `17` —
+the repo moved in a single day and M5 (the evaluation harness) shipped.** This is exactly
+why the rule is to re-measure: any figure written in this plan is a snapshot, never a
+source of truth.
 
 - [ ] **Step 2: Replace the frontmatter**
 
@@ -1232,7 +1235,7 @@ context: Solo project — product design, backend, frontend, and infrastructure
 bullets:
   - Two-layer tenant isolation — ORM query scoping plus Postgres row-level security
   - Grounded answers that stream in with citations resolving to the exact source passage
-  - 621 automated tests, including raw-SQL cross-tenant leak proofs
+  - 662 automated tests, including raw-SQL cross-tenant leak proofs
 stack: [Django REST, Next.js, PostgreSQL, pgvector, Celery, Keycloak]
 order: 1
 status: open-source
@@ -1292,7 +1295,7 @@ it did.
 
 ## Testing & quality
 
-621 automated tests — 336 on the backend across 31 files, 285 on the frontend across 29.
+662 automated tests, 377 on the backend across 32 files and 285 on the frontend across 29.
 The isolation ones matter most: unit tests on the scoped manager, tests that run raw SQL
 against real Postgres and check that row-level security actually blocks it, and
 end-to-end tests that try to leak data through the API. The repo has a standing rule that
@@ -1591,7 +1594,7 @@ Replaces the light minimal-editorial visual layer with a committed dark editoria
 and corrects case-study content that had gone out of date.
 
 - tenantiq rewritten: cited answers, streaming, guardrails and the frontend all shipped;
-  621 automated tests and 17 ADRs.
+  662 automated tests and 17 ADRs.
 - vetapp counts corrected; the unverifiable migration figure removed.
 - Hero led by a real product screenshot, painted immediately rather than behind the
   scroll reveal.
