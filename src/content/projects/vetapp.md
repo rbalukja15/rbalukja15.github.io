@@ -9,6 +9,7 @@ bullets:
 stack: [React, TypeScript, Django REST, PostgreSQL, Playwright]
 order: 3
 isPrivate: true
+thumbnail: /images/vetapp/dashboard-card.webp
 status: production
 ---
 

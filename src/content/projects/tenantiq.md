@@ -8,6 +8,7 @@ bullets:
   - 662 automated tests, including raw-SQL cross-tenant leak proofs
 stack: [Django REST, Next.js, PostgreSQL, pgvector, Celery, Keycloak]
 order: 1
+thumbnail: /images/tenantiq/documents-card.webp
 status: open-source
 links:
   github: https://github.com/rbalukja15/tenantiq
