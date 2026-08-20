@@ -1133,7 +1133,20 @@ back to the prose measure by adding to `CaseStudyLayout.astro`'s `<style>`:
   main.container {
     max-width: var(--container-prose);
   }
+
+  /* Break out of the 65ch prose measure. Screenshots are the product evidence — at the
+     reading width they render ~656px (55% scale) and secondary UI text drops to ~9px.
+     Viewport units are required here: a percentage would just re-inherit the prose cap. */
+  .prose :global(figure.shot) {
+    width: min(880px, calc(100vw - 2.5rem));
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
 ```
+
+Note: narrowing `main.container` alone does **not** widen the screenshots — `.prose`'s
+65ch cap was already the binding constraint at ~656px. The breakout rule above is what
+actually changes them.
 
 Then change these declarations inside the same `<style>` block, leaving everything else intact:
 
