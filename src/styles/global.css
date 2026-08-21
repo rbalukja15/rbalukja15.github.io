@@ -1,23 +1,23 @@
 :root {
-  --bg: #100f0d;
-  --surface: #17140f;
-  --surface-alt: #0d0c0a;
-  --ink: #f4f1ea;
-  --ink-soft: #a89e90;
-  /* #7d7264 was the first choice and measured 4.07:1 on --bg — below AA.
+  --bg: #0b0d11;
+  --surface: #12151b;
+  --surface-alt: #08090c;
+  --ink: #e8ecf2;
+  --ink-soft: #9aa4b2;
+  /* A warm #7d7264 was tried on the earlier warm palette and measured 4.07:1 — below AA.
      Do not darken this without re-running tests/contrast.spec.ts. */
-  --ink-faint: #8a7f70;
-  --accent: #d98a3d;
-  --border: #221f1a;
-  --border-strong: #2a251d;
-  --chip-bg: #221d16;
+  --ink-faint: #828d9c;
+  --accent: #5b9cff;
+  --border: #1c212a;
+  --border-strong: #252c38;
+  --chip-bg: #181d25;
 
   --status-live: #5cb87f;
-  /* Deliberately the same as --accent: "open source" is the default status.
-     Kept literal rather than var(--accent) so this block stays self-contained and
-     readable by non-browser CSS tooling. (var() would work — getComputedStyle
-     resolves it — the choice is about indirection, not capability.) */
-  --status-oss: #d98a3d;
+  /* Deliberately the same as --accent: "open source" is the default status. Keeping the
+     three status hues distinct (blue / green / purple) is what makes the pills readable
+     as states rather than decoration. Kept literal rather than var(--accent) so this
+     block stays self-contained and readable by non-browser CSS tooling. */
+  --status-oss: #5b9cff;
   --status-npm: #c98bdb;
 
   --font-serif: 'Fraunces', Georgia, 'Times New Roman', serif;
