@@ -5,7 +5,7 @@ context: Solo project — product design, backend, frontend, and infrastructure
 bullets:
   - Two-layer tenant isolation — ORM query scoping plus Postgres row-level security
   - Grounded answers that stream in with citations resolving to the exact source passage
-  - 662 automated tests, including raw-SQL cross-tenant leak proofs
+  - 692 automated tests, including raw-SQL cross-tenant leak proofs
 stack: [Django REST, Next.js, PostgreSQL, pgvector, Celery, Keycloak]
 order: 1
 thumbnail: /images/tenantiq/documents-card.webp
@@ -44,11 +44,11 @@ The grounding rules are enforced in code. The prompt forbids the model from comp
 
 Ingestion is built to be re-run: the attempt is recorded in its own transaction before any risky work, unparseable files fail permanently instead of burning retries, and re-ingesting a document replaces its old chunks.
 
-Seventeen architecture decision records in the repo explain why each of these went the way it did.
+Nineteen architecture decision records in the repo explain why each of these went the way it did.
 
 ## Testing & quality
 
-662 test functions, 377 on the backend across 32 files and 285 on the frontend across 29. The runners report more than that, because some cases are parametrised. The isolation ones matter most: unit tests on the scoped manager, tests that run raw SQL against real Postgres and check that row-level security actually blocks it, and end-to-end tests that try to leak data through the API. The repo has a standing rule that every new tenant-owned model ships with a cross-tenant test. CI runs the whole suite as the same non-superuser Postgres role production uses, because row-level security silently doesn't apply to superusers and I didn't want the tests lying to me.
+692 test functions, 407 on the backend across 35 files and 285 on the frontend across 29. The runners report more than that, because some cases are parametrised. The isolation ones matter most: unit tests on the scoped manager, tests that run raw SQL against real Postgres and check that row-level security actually blocks it, and end-to-end tests that try to leak data through the API. The repo has a standing rule that every new tenant-owned model ships with a cross-tenant test. CI runs the whole suite as the same non-superuser Postgres role production uses, because row-level security silently doesn't apply to superusers and I didn't want the tests lying to me.
 
 ## Outcome
 

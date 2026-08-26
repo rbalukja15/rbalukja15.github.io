@@ -42,18 +42,19 @@ const headlineAccent = "don't leak";
   </div>
   <!--
     These four figures are published claims and must stay reproducible from a clone.
-    Counted 2026-08-20 from ~/Desktop/tenantiq (it moved since 2026-08-19 — re-measure, do
-    not trust this comment blindly):
-      662 = 377 backend test functions (backend/tests) + 285 frontend test cases (frontend/tests)
-      17  = docs/adr/*.md excluding 0000-template.md
+    Counted 2026-08-26 from ~/Desktop/tenantiq @ main. These move FAST — tenantiq gained
+    30 backend tests and 2 ADRs in six days. Re-measure before any republish; do not trust
+    this comment.
+      692 = 407 backend test functions (backend/tests) + 285 frontend test cases (frontend/tests)
+      19  = docs/adr/*.md excluding 0000-template.md
       2   = the scoped ORM manager and Postgres row-level security
       1   = vetapp, in daily production
     Re-measure before changing them; see Task 8 of the redesign plan.
   -->
   <div class="evidence">
     <div class="container evidence-row">
-      <span>662 automated tests</span>
-      <span>17 architecture decision records</span>
+      <span>692 automated tests</span>
+      <span>19 architecture decision records</span>
       <span>2 independent isolation layers</span>
       <span>1 system in daily production</span>
     </div>
