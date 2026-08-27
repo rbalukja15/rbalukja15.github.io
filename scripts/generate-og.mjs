@@ -3,12 +3,11 @@
 // Run: node scripts/generate-og.mjs
 //
 // NOTE: The kicker and headline baked into scripts/og-template.html are copied by hand
-// from src/components/Hero.astro ("Multi-tenant B2B SaaS · Access control" / "Multi-tenant
-// systems that don't leak."). That headline is PLACEHOLDER COPY drafted by Claude and is
-// pending a rewrite by the repo owner (see the "PLACEHOLDER COPY" comment atop Hero.astro,
-// Task 12 Gate 1). Whenever the hero copy changes, update og-template.html to match and
-// re-run this script — otherwise the LinkedIn/Slack/Twitter/iMessage preview card will
-// keep showing stale copy the site no longer says.
+// from src/components/Hero.astro ("Multi-tenant B2B SaaS · Access control" / "I build
+// multi-tenant systems and prove they hold."). There is no build-time link between the
+// two, so whenever the hero copy changes, update og-template.html to match, re-run this
+// script, AND update the meta description in src/pages/index.astro — otherwise the
+// LinkedIn/Slack/Twitter/iMessage card keeps showing copy the site no longer says.
 import { chromium } from '@playwright/test';
 import { pathToFileURL } from 'node:url';
 import { mkdirSync } from 'node:fs';
