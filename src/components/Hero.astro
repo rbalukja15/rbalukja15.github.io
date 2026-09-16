@@ -131,11 +131,10 @@ const headlineAccent = 'prove they hold';
     margin-top: 3.5rem;
     background: var(--surface-alt);
   }
-  /* Source of a small intermittent CLS (~0.0165): at <=900px these four spans sit on a
-     flex-wrap boundary, and the generic monospace fallback is 24-52px wider per item than
-     JetBrains Mono, so the row can change height when the font swaps in. Measured, not
-     guessed. Left as-is: well under Google's 0.1 "good" threshold, and it does not move
-     the Performance score. */
+  /* These four spans sit on a flex-wrap boundary at <=900px. That used to cause an
+     intermittent CLS when JetBrains Mono swapped in and changed their widths. The mono
+     stack is system-only now, which removed that swap; a smaller intermittent shift from
+     the remaining webfonts survives, well inside budget. Do not reintroduce a mono webfont. */
   .evidence-row {
     display: flex;
     flex-wrap: wrap;

@@ -13,6 +13,12 @@ const projects = (await getCollection('projects')).sort(
 const [featured, ...rest] = projects;
 ---
 <BaseLayout
+  preloadHero={{
+    src: '/images/tenantiq/ask-hero.webp',
+    srcset:
+      '/images/tenantiq/ask-hero-640.webp 640w, /images/tenantiq/ask-hero-900.webp 900w, /images/tenantiq/ask-hero.webp 1200w',
+    sizes: '(max-width: 820px) 92vw, (max-width: 1080px) 55vw, 547px',
+  }}
   title="Romarjo Balukja — Senior Software Engineer"
   description="Senior software engineer, 7+ years. I build multi-tenant B2B SaaS and prove the isolation holds: tenant scoping in the ORM, Postgres row-level security under it, and tests that try to leak across tenants."
 >

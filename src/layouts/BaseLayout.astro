@@ -4,7 +4,6 @@ import '@fontsource/fraunces/latin-600.css';
 // monogram, and the extra 18KB cost 302ms of LCP. ProjectCard uses weight 600 instead.
 import '@fontsource/inter/latin-400.css';
 import '@fontsource/inter/latin-600.css';
-import '@fontsource/jetbrains-mono/latin-400.css';
 import fraunces600 from '@fontsource/fraunces/files/fraunces-latin-600-normal.woff2?url';
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
@@ -13,9 +12,12 @@ import Footer from '../components/Footer.astro';
 interface Props {
   title: string;
   description: string;
+  /** Preload the LCP image on pages that have one above the fold. Must mirror the
+   *  <img>'s own srcset/sizes exactly, or the browser fetches a second candidate. */
+  preloadHero?: { src: string; srcset: string; sizes: string };
 }
 
-const { title, description } = Astro.props;
+const { title, description, preloadHero } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL('/images/og.png', Astro.site);
 ---
@@ -25,6 +27,16 @@ const ogImage = new URL('/images/og.png', Astro.site);
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="preload" as="font" type="font/woff2" href={fraunces600} crossorigin />
+    {preloadHero && (
+      <link
+        rel="preload"
+        as="image"
+        href={preloadHero.src}
+        imagesrcset={preloadHero.srcset}
+        imagesizes={preloadHero.sizes}
+        fetchpriority="high"
+      />
+    )}
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />

@@ -23,7 +23,13 @@
   --font-serif: 'Fraunces', Georgia, 'Times New Roman', serif;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* System mono, deliberately not a webfont. JetBrains Mono cost 225ms of LCP and was the
+     largest contributor to the page's CLS: the evidence row sat on a flex-wrap boundary
+     and the fallback measured wider per item, so the row changed height when the font
+     swapped in. Dropping it took LCP 1802ms->1577ms; CLS went 0.0165 to an intermittent
+     0.0152/0.0000, so a smaller shift from the remaining font swaps survives. At 10px
+     uppercase microtype the visual difference is not noticeable. */
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
 
   --radius: 8px;
   --shadow-hover: 0 18px 38px -14px rgb(0 0 0 / 0.75);
