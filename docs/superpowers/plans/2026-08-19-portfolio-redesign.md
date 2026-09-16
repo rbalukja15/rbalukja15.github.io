@@ -1555,6 +1555,15 @@ const lcp=r.audits["largest-contentful-paint"].numericValue;
 const cls=r.audits["cumulative-layout-shift"].numericValue;
 const fail=[];
 if (lcp > 1800) fail.push(`LCP ${Math.round(lcp)}ms > 1800ms budget`);
+// Met at 1577-1581ms, not by raising the line. Two levers got there:
+//  1. Preload the hero image from BaseLayout (Load Delay + Load Time -> 0ms). On its own
+//     this moved nothing: Render Delay absorbed the gain, which is how we learned the
+//     bottleneck was main-thread, not network.
+//  2. Drop the mono WEBFONT for a system stack. Four webfonts each pay a swap repaint
+//     under 4x CPU throttle; JetBrains Mono served only 10px uppercase microtype.
+//     Worth 225ms, 21KB, and the largest CLS contributor.
+// Note lazy card thumbnails ARE still fetched during initial load - Chrome's lazy
+// threshold is generous - so `loading="lazy"` does not remove them from the LCP race.
 // 0.05, not 0.01: the hero introduced an intermittent font-swap shift measuring
 // 0.0165 on some runs and 0.0000 on others. Still 6x better than Google's 0.1 "good".
 if (cls > 0.05) fail.push(`CLS ${cls} > 0.05`);
@@ -1579,6 +1588,8 @@ The remaining 1.1s → 1.4s is **not a defect to chase**. It is the honest, acce
 moving body copy from a zero-latency system font to a downloaded webfont, which is a
 deliberate design decision. The LCP element is the hero paragraph, so it moves when Inter
 swaps in. Preloading Inter was tested and does not recover it.
+
+The budget stayed **1800ms** and was met rather than moved — see the note below.
 
 Budget is therefore **1800ms**: above the real 1.4s so normal noise and the new hero image
 don't cause false alarms, and far under Google's 2500ms "good" threshold, while still
