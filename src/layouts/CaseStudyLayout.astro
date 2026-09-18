@@ -36,6 +36,9 @@ const { title, tagline, context, stack, links, isPrivate } = project.data;
     padding-top: 3rem;
     padding-bottom: 3.5rem;
   }
+  main.container {
+    max-width: var(--container-prose);
+  }
   .cs-header {
     border-bottom: 1px solid var(--border);
     padding-bottom: 1.75rem;
@@ -89,21 +92,30 @@ const { title, tagline, context, stack, links, isPrivate } = project.data;
     font-size: 0.95rem;
   }
   .prose :global(a) {
+    color: var(--accent);
     text-decoration: underline;
+    text-underline-offset: 3px;
   }
   .prose :global(img) {
     border: 1px solid var(--border);
     border-radius: var(--radius);
     margin: 1rem 0;
   }
+  /* Break out of the 65ch prose measure. Screenshots are the product evidence — at the
+     reading width they render ~656px (55% scale) and secondary UI text drops to ~9px.
+     Viewport units are required here: a percentage would just re-inherit the prose cap. */
   .prose :global(figure.shot) {
     margin: 1.5rem 0;
+    width: min(880px, calc(100vw - 2.5rem));
+    margin-left: 50%;
+    transform: translateX(-50%);
   }
   .prose :global(figure.shot img) {
     width: 100%;
     height: auto;
     margin: 0;
-    box-shadow: 0 1px 3px rgb(17 18 20 / 0.06);
+    border-color: var(--border-strong);
+    box-shadow: 0 14px 30px -12px rgb(0 0 0 / 0.7);
   }
   .prose :global(figure.shot figcaption) {
     color: var(--ink-faint);

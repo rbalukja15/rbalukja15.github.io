@@ -62,6 +62,31 @@ test('home sections reveal on scroll', async ({ page }) => {
   await expect(skills.locator('.reveal').first()).toHaveClass(/is-visible/);
 });
 
+test('hero is painted immediately, never behind the reveal', async ({ page }) => {
+  await page.goto('/');
+  // The hero is the reason this redesign exists: it must never start invisible.
+  await expect(page.locator('#hero .reveal')).toHaveCount(0);
+  await expect(page.locator('#hero h1')).toHaveCSS('opacity', '1');
+});
+
+test('the featured project card is painted immediately too', async ({ page }) => {
+  await page.goto('/');
+  const featured = page.locator('#projects .featured');
+  await expect(featured).toHaveCount(1);
+  // Descendant check, not a parent-axis one: `.locator('..')` walks exactly one level, so
+  // wrapping the card in any intervening div would let the bug back in while still passing.
+  await expect(page.locator('#projects .reveal .featured')).toHaveCount(0);
+});
+
+test('the non-featured cards still reveal on scroll', async ({ page }) => {
+  await page.goto('/');
+  // The other half of the contract: un-gating the featured card must not disable the
+  // animation for the pair below it.
+  const pair = page.locator('#projects .pair');
+  await pair.scrollIntoViewIfNeeded();
+  await expect(page.locator('#projects .reveal').first()).toHaveClass(/is-visible/);
+});
+
 test('reduced motion shows everything without scrolling', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('/');

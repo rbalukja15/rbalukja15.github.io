@@ -71,3 +71,12 @@ test('react-ui-kit case study links to its Storybook', async ({ page }) => {
   await page.goto('/projects/react-ui-kit/');
   await expect(page.locator(`main a[href="${CANONICAL.storybook}"]`)).toContainText('Storybook');
 });
+
+test('every project card carries a status pill', async ({ page }) => {
+  await page.goto('/');
+  const pills = page.locator('#projects .status');
+  await expect(pills).toHaveCount(3);
+  await expect(pills.filter({ hasText: 'In daily production' })).toHaveCount(1);
+  await expect(pills.filter({ hasText: 'Open source' })).toHaveCount(1);
+  await expect(pills.filter({ hasText: 'Published on npm' })).toHaveCount(1);
+});

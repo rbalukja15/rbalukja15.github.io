@@ -9,6 +9,8 @@ bullets:
 stack: [React, TypeScript, Django REST, PostgreSQL, Playwright]
 order: 3
 isPrivate: true
+thumbnail: /images/vetapp/dashboard-card.webp
+status: production
 ---
 
 ## Problem
@@ -17,7 +19,7 @@ A working veterinary clinic was running on paper and spreadsheets. Stock was cou
 
 ## What I built
 
-Clients and pets with full medical histories: vaccinations, antiparasite treatments, medications, illnesses. Appointments with a calendar. Invoices with discounts, tax, PDF export, and payment tracking. Inventory across twelve product categories, with a stock-take workflow. Purchase orders with a supplier ledger that is append-only, so the debt history can't be quietly edited. Per-user permissions for admins, vets, and reception. An audit log of every change. Email reminders for tomorrow's appointments, vaccinations coming due, and overdue invoices. It comes out to 22 Django models, 22 API viewsets, and 26 pages of Next.js frontend.
+Clients and pets with full medical histories: vaccinations, antiparasite treatments, medications, illnesses. Appointments with a calendar. Invoices with discounts, tax, PDF export, and payment tracking. Inventory across ten product categories, with a stock-take workflow. Purchase orders with a supplier ledger that is append-only, so the debt history can't be quietly edited. Per-user permissions for admins, vets, and reception. An audit log of every change. Email reminders for tomorrow's appointments, vaccinations coming due, and overdue invoices. It comes out to 22 Django models, 21 API viewsets, and 26 pages of Next.js frontend.
 
 <figure class="shot">
   <img src="/images/vetapp/dashboard.webp" width="1200" height="670" loading="lazy" decoding="async" alt="VetApp dashboard with summary cards for clients, today's appointments, month-to-date revenue, low stock and outstanding invoices, a list of upcoming appointments, and a vaccinations-due panel." />
@@ -45,7 +47,7 @@ The trickiest domain logic is pack pricing. Products are bought in packs (a 20 k
 
 ## Testing & quality
 
-366 backend tests and 92 Playwright end-to-end tests across 32 spec files. The e2e suite drives the real dockerized stack: it logs in, fills the forms, collects payments, receives purchase orders. No mocked backend. CI runs all of it on every push — pytest against real Postgres and Redis, lint, a production build, the e2e suite, and a check that fails if the English and Albanian translation files ever drift apart. 52 migrations and 18 tagged releases in four months. Everything goes through an adversarial review pass before merging; that habit has caught bugs as subtle as a stored Decimal comparing unequal to its own re-submitted form value.
+324 backend test functions and 177 Playwright end-to-end tests across 54 spec files. The e2e suite drives the real dockerized stack: it logs in, fills the forms, collects payments, receives purchase orders. No mocked backend. CI runs all of it on every push — pytest against real Postgres and Redis, lint, a production build, the e2e suite, and a check that fails if the English and Albanian translation files ever drift apart. 55 migrations and 31 tagged releases so far. Everything goes through an adversarial review pass before merging; that habit has caught bugs as subtle as a stored Decimal comparing unequal to its own re-submitted form value.
 
 ## Outcome
 

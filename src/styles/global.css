@@ -1,23 +1,41 @@
 :root {
-  --bg: #faf9f6;
-  --surface: #ffffff;
-  --surface-alt: #f5f3ee;
-  --ink: #111214;
-  --ink-soft: #55575c;
-  --ink-faint: #696c72;
-  --accent: #1d4ed8;
-  --border: #e5e3dc;
-  --border-strong: #d8d5cc;
-  --chip-bg: #f1efe9;
+  --bg: #0b0d11;
+  --surface: #12151b;
+  --surface-alt: #08090c;
+  --ink: #e8ecf2;
+  --ink-soft: #9aa4b2;
+  /* A warm #7d7264 was tried on the earlier warm palette and measured 4.07:1 — below AA.
+     Do not darken this without re-running tests/contrast.spec.ts. */
+  --ink-faint: #828d9c;
+  --accent: #5b9cff;
+  --border: #1c212a;
+  --border-strong: #252c38;
+  --chip-bg: #181d25;
+
+  --status-live: #5cb87f;
+  /* Deliberately the same as --accent: "open source" is the default status. Keeping the
+     three status hues distinct (blue / green / purple) is what makes the pills readable
+     as states rather than decoration. Kept literal rather than var(--accent) so this
+     block stays self-contained and readable by non-browser CSS tooling. */
+  --status-oss: #5b9cff;
+  --status-npm: #c98bdb;
 
   --font-serif: 'Fraunces', Georgia, 'Times New Roman', serif;
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
+  /* System mono, deliberately not a webfont. JetBrains Mono cost 225ms of LCP and was the
+     largest contributor to the page's CLS: the evidence row sat on a flex-wrap boundary
+     and the fallback measured wider per item, so the row changed height when the font
+     swapped in. Dropping it took LCP 1802ms->1577ms; CLS went 0.0165 to an intermittent
+     0.0152/0.0000, so a smaller shift from the remaining font swaps survives. At 10px
+     uppercase microtype the visual difference is not noticeable. */
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
 
   --radius: 8px;
-  --shadow-hover: 0 12px 24px -8px rgb(17 18 20 / 0.18);
+  --shadow-hover: 0 18px 38px -14px rgb(0 0 0 / 0.75);
   --dur: 250ms;
-  --container: 760px;
+  --container: 1040px;
+  --container-prose: 760px;
 }
 
 * {
@@ -53,6 +71,14 @@ p {
 a {
   color: var(--accent);
   text-decoration: none;
+}
+
+/* One focus ring for the whole site. Components must not redefine this — the previous
+   per-component copies drifted, leaving project-card and case-study links unstyled. */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
 img {
@@ -135,4 +161,14 @@ img {
     transition: none !important;
     animation: none !important;
   }
+}
+
+/* Section numbering used by home sections */
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 0.7rem;
 }

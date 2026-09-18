@@ -7,15 +7,31 @@ interface Props {
 }
 
 const { project, featured = false } = Astro.props;
-const { title, bullets, stack, thumbnail, links } = project.data;
+const { title, bullets, stack, thumbnail, links, status } = project.data;
+
+// Keyed by the schema's own union, not `string`: with a plain Record<string, ...> a new
+// status added to content.config.ts silently renders no pill at all — verified, no error
+// from astro check or the build. This makes the compiler catch it instead.
+type Status = NonNullable<CollectionEntry<'projects'>['data']['status']>;
+
+const STATUS: Record<Status, { label: string; tone: string }> = {
+  production: { label: 'In daily production', tone: 'live' },
+  'open-source': { label: 'Open source', tone: 'oss' },
+  npm: { label: 'Published on npm', tone: 'npm' },
+};
+const badge = status ? STATUS[status] : null;
 ---
 <article class:list={['card', { featured }]}>
+  {/* Always lazy: the featured card measures 69% below the fold at 1280x900 and fully
+      below it at 390x844, so eager-loading its thumbnail only competes with the hero
+      image for bandwidth. Doing so cost 223ms of LCP. */}
   {thumbnail ? (
-    <img class="thumb" src={thumbnail} alt={`${title} screenshot`} loading={featured ? 'eager' : 'lazy'} decoding="async" />
+    <img class="thumb" src={thumbnail} alt={`${title} screenshot`} loading="lazy" decoding="async" />
   ) : (
     <div class="monogram" aria-hidden="true">{title.charAt(0)}</div>
   )}
   <div class="body">
+    {badge && <span class:list={['status', badge.tone]}>{badge.label}</span>}
     <h3>{title}</h3>
     <ul>
       {bullets.map((b) => <li>{b}</li>)}
@@ -64,7 +80,9 @@ const { title, bullets, stack, thumbnail, links } = project.data;
     color: var(--accent);
     font-family: var(--font-serif);
     font-size: 3rem;
-    font-weight: 700;
+    /* 600, not 700: the 700 face is not loaded (see BaseLayout) and asking for it
+       would trigger synthetic bold. */
+    font-weight: 600;
   }
   .body {
     padding: 1.1rem 1.25rem 1.25rem;
@@ -101,5 +119,30 @@ const { title, bullets, stack, thumbnail, links } = project.data;
   }
   .links a {
     padding-block: 0.25rem;
+  }
+  .status {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    margin-bottom: 0.6rem;
+  }
+  .status.live {
+    color: var(--status-live);
+    border: 1px solid color-mix(in srgb, var(--status-live) 34%, transparent);
+    background: color-mix(in srgb, var(--status-live) 10%, transparent);
+  }
+  .status.oss {
+    color: var(--status-oss);
+    border: 1px solid color-mix(in srgb, var(--status-oss) 34%, transparent);
+    background: color-mix(in srgb, var(--status-oss) 10%, transparent);
+  }
+  .status.npm {
+    color: var(--status-npm);
+    border: 1px solid color-mix(in srgb, var(--status-npm) 34%, transparent);
+    background: color-mix(in srgb, var(--status-npm) 10%, transparent);
   }
 </style>

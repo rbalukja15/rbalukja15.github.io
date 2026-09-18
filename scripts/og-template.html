@@ -1,12 +1,88 @@
 <!doctype html>
 <html>
-<head><meta charset="utf-8"></head>
-<body style="margin:0">
-  <div style="width:1200px;height:630px;background:#faf9f6;display:flex;flex-direction:column;justify-content:center;padding:0 96px;box-sizing:border-box;font-family:-apple-system,'Helvetica Neue',Arial,sans-serif;">
-    <div style="font-size:22px;font-weight:600;letter-spacing:4px;color:#1d4ed8;margin-bottom:20px;">SENIOR SOFTWARE ENGINEER &middot; FULL-STACK &amp; DEVOPS</div>
-    <div style="font-family:Georgia,'Times New Roman',serif;font-size:88px;font-weight:600;color:#111214;line-height:1.1;">Romarjo Balukja</div>
-    <div style="font-size:30px;color:#55575c;margin-top:24px;">I build products end to end.</div>
-    <div style="position:absolute;bottom:56px;left:96px;font-size:22px;color:#8a8d93;">rbalukja15.github.io</div>
+<head>
+<meta charset="utf-8" />
+<style>
+  @font-face {
+    font-family: 'Fraunces';
+    font-style: normal;
+    font-weight: 600;
+    src: url('file:///Users/romarjobalukja/Desktop/rbalukja15.github.io/node_modules/@fontsource/fraunces/files/fraunces-latin-600-normal.woff2') format('woff2');
+    font-display: block;
+  }
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  html,
+  body {
+    width: 1200px;
+    height: 630px;
+    background: #0b0d11;
+  }
+  .card {
+    width: 1200px;
+    height: 630px;
+    background: #0b0d11;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 96px 104px 60px;
+    font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  }
+  .kicker {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #5b9cff;
+  }
+  .name {
+    font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+    font-weight: 600;
+    font-size: 82px;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: #e8ecf2;
+    margin-top: 28px;
+  }
+  .headline {
+    font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+    font-weight: 600;
+    font-size: 42px;
+    line-height: 1.28;
+    color: #e8ecf2;
+    margin-top: 26px;
+    max-width: 970px;
+  }
+  .headline em {
+    font-style: italic;
+    color: #5b9cff;
+  }
+  .footer {
+    border-top: 1px solid #1c212a;
+    padding-top: 26px;
+  }
+  .url {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 21px;
+    letter-spacing: 0.04em;
+    color: #828d9c;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div>
+      <div class="kicker">Multi-tenant B2B SaaS &middot; Access control</div>
+      <div class="name">Romarjo Balukja</div>
+      <div class="headline">I build multi-tenant systems and <em>prove they hold</em>.</div>
+    </div>
+    <div class="footer">
+      <div class="url">rbalukja15.github.io</div>
+    </div>
   </div>
 </body>
 </html>
