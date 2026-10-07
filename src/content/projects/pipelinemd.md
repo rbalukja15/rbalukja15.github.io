@@ -1,6 +1,6 @@
 ---
 title: pipelinemd
-tagline: A CI failure doctor — reads a failed pipeline, works out what actually broke, and says how far to trust the answer
+tagline: A GitLab CI failure doctor — reads a failed pipeline, works out what actually broke, and says how far to trust the answer
 context: Solo project — CLI, rule catalog, evaluation harness, and release pipeline
 bullets:
   - Cuts a 3,000-line job log down to the ~20 lines that explain the failure
@@ -79,4 +79,4 @@ A confident wrong answer is the worst thing the catalog can do, so that rule no 
   <figcaption>"I don't know, and here is the line to read" is the honest answer while no rule covers packaging metadata failures. That log is now the first fixture for the rule that will.</figcaption>
 </figure>
 
-Every corpus case passes. The first real log it met broke a rule, which is the argument for growing the corpus with observed traces rather than trusting a number drawn from authored ones. An auto-fix merge request generator and support for GitHub Actions runs are the two things still open.
+Every corpus case passes. The first real log it met broke a rule, which is the argument for growing the corpus with observed traces rather than trusting a number drawn from authored ones. An auto-fix merge request generator and support for diagnosing GitHub Actions runs are the next two features.
