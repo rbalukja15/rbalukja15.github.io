@@ -6,7 +6,7 @@ bullets:
   - Reusable MUI 5 components behind a coherent design system
   - Every component documented and browsable in a live Storybook
 stack: [React, TypeScript, MUI 5, Storybook]
-order: 2
+order: 4
 links:
   github: https://github.com/rbalukja15/react-ui-kit
   live: https://rbalukja15.github.io/react-ui-kit/

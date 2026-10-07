@@ -20,7 +20,7 @@ const projects = defineCollection({
       })
       .optional(),
     isPrivate: z.boolean().default(false),
-    status: z.enum(['production', 'open-source', 'npm']).optional(),
+    status: z.enum(['production', 'open-source', 'npm', 'pypi']).optional(),
   }),
 });
 

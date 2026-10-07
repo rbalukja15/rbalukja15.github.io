@@ -6,17 +6,17 @@ test.describe('home cards', () => {
     await page.goto('/');
   });
 
-  test('renders three project cards, lowest order featured full-width', async ({ page }) => {
+  test('renders four project cards, lowest order featured full-width', async ({ page }) => {
     const cards = page.locator('#projects article');
-    await expect(cards).toHaveCount(3);
-    // order-driven, not slug-driven (spec §3.1): first card = order 1 = tenantiq
-    await expect(cards.first()).toContainText('tenantiq');
+    await expect(cards).toHaveCount(4);
+    // order-driven, not slug-driven (spec §3.1): first card = order 1 = pipelinemd
+    await expect(cards.first()).toContainText('pipelinemd');
     await expect(cards.first()).toHaveClass(/featured/);
   });
 
   test('every card shows bullets, stack chips, and a case-study link', async ({ page }) => {
     const cards = page.locator('#projects article');
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 4; i++) {
       const card = cards.nth(i);
       await expect(card.locator('ul li').first()).toBeVisible();
       await expect(card.locator('.chip').first()).toBeVisible();
@@ -26,7 +26,7 @@ test.describe('home cards', () => {
 
   test('cards render thumbnail or monogram fallback (both states valid)', async ({ page }) => {
     const cards = page.locator('#projects article');
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 4; i++) {
       const card = cards.nth(i);
       const hasVisual =
         (await card.locator('img.thumb').count()) + (await card.locator('.monogram').count());
@@ -36,6 +36,8 @@ test.describe('home cards', () => {
 
   test('public projects link out; vetapp does not', async ({ page }) => {
     const projects = page.locator('#projects');
+    await expect(projects.locator(`a[href="${CANONICAL.pipelinemdGithub}"]`)).toBeVisible();
+    await expect(projects.locator(`a[href="${CANONICAL.pipelinemdPypi}"]`)).toBeVisible();
     await expect(projects.locator(`a[href="${CANONICAL.tenantiqGithub}"]`)).toBeVisible();
     await expect(projects.locator(`a[href="${CANONICAL.uiKitGithub}"]`)).toBeVisible();
     await expect(projects.locator(`a[href="${CANONICAL.storybook}"]`)).toBeVisible();
@@ -44,7 +46,12 @@ test.describe('home cards', () => {
   });
 });
 
-const CASE_STUDIES = ['/projects/tenantiq/', '/projects/react-ui-kit/', '/projects/vetapp/'];
+const CASE_STUDIES = [
+  '/projects/pipelinemd/',
+  '/projects/tenantiq/',
+  '/projects/react-ui-kit/',
+  '/projects/vetapp/',
+];
 
 for (const path of CASE_STUDIES) {
   test(`case study ${path} loads with header`, async ({ page }) => {
@@ -62,6 +69,12 @@ test('vetapp case study shows private note, no repo links', async ({ page }) => 
   await expect(page.locator('main a[href*="github.com"]')).toHaveCount(0);
 });
 
+test('pipelinemd case study links to its repo and PyPI', async ({ page }) => {
+  await page.goto('/projects/pipelinemd/');
+  await expect(page.locator(`main a[href="${CANONICAL.pipelinemdGithub}"]`)).toBeVisible();
+  await expect(page.locator(`main a[href="${CANONICAL.pipelinemdPypi}"]`)).toContainText('PyPI');
+});
+
 test('tenantiq case study links to its repo', async ({ page }) => {
   await page.goto('/projects/tenantiq/');
   await expect(page.locator(`main a[href="${CANONICAL.tenantiqGithub}"]`)).toBeVisible();
@@ -75,8 +88,9 @@ test('react-ui-kit case study links to its Storybook', async ({ page }) => {
 test('every project card carries a status pill', async ({ page }) => {
   await page.goto('/');
   const pills = page.locator('#projects .status');
-  await expect(pills).toHaveCount(3);
+  await expect(pills).toHaveCount(4);
   await expect(pills.filter({ hasText: 'In daily production' })).toHaveCount(1);
   await expect(pills.filter({ hasText: 'Open source' })).toHaveCount(1);
   await expect(pills.filter({ hasText: 'Published on npm' })).toHaveCount(1);
+  await expect(pills.filter({ hasText: 'Published on PyPI' })).toHaveCount(1);
 });

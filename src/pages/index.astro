@@ -27,7 +27,7 @@ const [featured, ...rest] = projects;
     <section id="projects" class="section">
       <div class="container">
         <p class="section-label">01 &middot; Selected work</p>
-        <h2>Three systems, three problems.</h2>
+        <h2>Four systems, four problems.</h2>
         <p class="sub">Each opens a full case study.</p>
         <ProjectCard project={featured} featured />
         <Reveal>
@@ -58,10 +58,14 @@ const [featured, ...rest] = projects;
   }
   .pair {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    /* Three across, not two. The featured card takes the first project and three
+       remain; a two-column grid leaves the last one orphaned in a half-width row. */
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.1rem;
   }
-  @media (max-width: 760px) {
+  /* Straight to one column: at three columns the cards fall under ~240px here, and
+     two columns would re-introduce the orphan row. */
+  @media (max-width: 900px) {
     .pair {
       grid-template-columns: 1fr;
     }

@@ -40,7 +40,13 @@ for (const asset of [
   });
 }
 
-const ALL_PAGES = ['/', '/projects/tenantiq/', '/projects/react-ui-kit/', '/projects/vetapp/'];
+const ALL_PAGES = [
+  '/',
+  '/projects/pipelinemd/',
+  '/projects/tenantiq/',
+  '/projects/react-ui-kit/',
+  '/projects/vetapp/',
+];
 
 for (const path of ALL_PAGES) {
   test(`no console errors on ${path}`, async ({ page }) => {

@@ -7,7 +7,7 @@ bullets:
   - Grounded answers that stream in with citations resolving to the exact source passage
   - 692 automated tests, including raw-SQL cross-tenant leak proofs
 stack: [Django REST, Next.js, PostgreSQL, pgvector, Celery, Keycloak]
-order: 1
+order: 2
 thumbnail: /images/tenantiq/documents-card.webp
 status: open-source
 links:
