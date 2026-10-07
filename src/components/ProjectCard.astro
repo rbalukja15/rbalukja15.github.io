@@ -18,6 +18,9 @@ const STATUS: Record<Status, { label: string; tone: string }> = {
   production: { label: 'In daily production', tone: 'live' },
   'open-source': { label: 'Open source', tone: 'oss' },
   npm: { label: 'Published on npm', tone: 'npm' },
+  // Same tone as npm deliberately: the hue means "published package", the label
+  // names the registry. A fourth hue would have to dodge green, blue and purple.
+  pypi: { label: 'Published on PyPI', tone: 'npm' },
 };
 const badge = status ? STATUS[status] : null;
 ---
@@ -70,7 +73,10 @@ const badge = status ? STATUS[status] : null;
     height: 150px;
     width: 100%;
     object-fit: cover;
-    object-position: top;
+    /* Left, not centre. These strips are wider than the card's 150px band, so cover
+       crops them horizontally. Centring slices the meaningful left edge of a UI
+       screenshot off and leaves a legible-looking but meaningless middle. */
+    object-position: left top;
   }
   .monogram {
     display: flex;
