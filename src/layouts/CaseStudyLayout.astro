@@ -22,6 +22,8 @@ const { title, tagline, context, stack, links, isPrivate } = project.data;
       <div class="links">
         {links?.github && <a class="fancy-link" href={links.github} target="_blank" rel="noopener">GitHub &nearr;</a>}
         {links?.live && <a class="fancy-link" href={links.live} target="_blank" rel="noopener">{links.liveLabel} &nearr;</a>}
+        {links?.demo && <a class="fancy-link" href={links.demo} target="_blank" rel="noopener">Demo &nearr;</a>}
+        {links?.writeup && <a class="fancy-link" href={links.writeup} target="_blank" rel="noopener">Full write-up &nearr;</a>}
         {isPrivate && <span class="private-note">Private production codebase</span>}
       </div>
     </header>
@@ -71,7 +73,8 @@ const { title, tagline, context, stack, links, isPrivate } = project.data;
   }
   .links {
     display: flex;
-    gap: 1rem;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
     align-items: center;
   }
   .private-note {

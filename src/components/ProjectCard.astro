@@ -50,6 +50,9 @@ const badge = status ? STATUS[status] : null;
       {links?.live && (
         <a class="fancy-link" href={links.live} target="_blank" rel="noopener" aria-label={`${links.liveLabel}: ${title}`}>{links.liveLabel} &nearr;</a>
       )}
+      {links?.demo && (
+        <a class="fancy-link" href={links.demo} target="_blank" rel="noopener" aria-label={`Demo: ${title}`}>Demo &nearr;</a>
+      )}
     </div>
   </div>
 </article>

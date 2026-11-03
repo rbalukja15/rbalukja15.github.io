@@ -17,6 +17,11 @@ const projects = defineCollection({
         github: z.url().optional(),
         live: z.url().optional(),
         liveLabel: z.string().default('Live'),
+        // A running demo, separate from `live` so a project can link a package
+        // registry and a demo at once.
+        demo: z.url().optional(),
+        // Long-form write-up kept in the project's own repo. Case-study page only.
+        writeup: z.url().optional(),
       })
       .optional(),
     isPrivate: z.boolean().default(false),

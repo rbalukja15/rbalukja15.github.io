@@ -2,6 +2,8 @@
 export const CANONICAL = {
   pipelinemdGithub: 'https://github.com/rbalukja15/pipelinemd',
   pipelinemdPypi: 'https://pypi.org/project/pipelinemd/',
+  pipelinemdDemo: 'https://rbalukja15.github.io/pipelinemd/',
+  pipelinemdWriteup: 'https://github.com/rbalukja15/pipelinemd/blob/main/docs/case-study.md',
   tenantiqGithub: 'https://github.com/rbalukja15/tenantiq',
   uiKitGithub: 'https://github.com/rbalukja15/react-ui-kit',
   storybook: 'https://rbalukja15.github.io/react-ui-kit/',
