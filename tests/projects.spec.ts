@@ -38,6 +38,9 @@ test.describe('home cards', () => {
     const projects = page.locator('#projects');
     await expect(projects.locator(`a[href="${CANONICAL.pipelinemdGithub}"]`)).toBeVisible();
     await expect(projects.locator(`a[href="${CANONICAL.pipelinemdPypi}"]`)).toBeVisible();
+    await expect(projects.locator(`a[href="${CANONICAL.pipelinemdDemo}"]`)).toBeVisible();
+    // The write-up lives on the case-study page; the card already leads there.
+    await expect(projects.locator(`a[href="${CANONICAL.pipelinemdWriteup}"]`)).toHaveCount(0);
     await expect(projects.locator(`a[href="${CANONICAL.tenantiqGithub}"]`)).toBeVisible();
     await expect(projects.locator(`a[href="${CANONICAL.uiKitGithub}"]`)).toBeVisible();
     await expect(projects.locator(`a[href="${CANONICAL.storybook}"]`)).toBeVisible();
@@ -69,10 +72,13 @@ test('vetapp case study shows private note, no repo links', async ({ page }) => 
   await expect(page.locator('main a[href*="github.com"]')).toHaveCount(0);
 });
 
-test('pipelinemd case study links to its repo and PyPI', async ({ page }) => {
+test('pipelinemd case study links to its repo, PyPI, demo and full write-up', async ({ page }) => {
   await page.goto('/projects/pipelinemd/');
-  await expect(page.locator(`main a[href="${CANONICAL.pipelinemdGithub}"]`)).toBeVisible();
-  await expect(page.locator(`main a[href="${CANONICAL.pipelinemdPypi}"]`)).toContainText('PyPI');
+  const header = page.locator('.cs-header');
+  await expect(header.locator(`a[href="${CANONICAL.pipelinemdGithub}"]`)).toBeVisible();
+  await expect(header.locator(`a[href="${CANONICAL.pipelinemdPypi}"]`)).toContainText('PyPI');
+  await expect(header.locator(`a[href="${CANONICAL.pipelinemdDemo}"]`)).toContainText('Demo');
+  await expect(header.locator(`a[href="${CANONICAL.pipelinemdWriteup}"]`)).toContainText('Full write-up');
 });
 
 test('tenantiq case study links to its repo', async ({ page }) => {

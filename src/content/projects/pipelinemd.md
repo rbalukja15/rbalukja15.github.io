@@ -1,11 +1,11 @@
 ---
 title: pipelinemd
-tagline: A GitLab CI failure doctor — reads a failed pipeline, works out what actually broke, and says how far to trust the answer
+tagline: A CI failure doctor for GitLab and GitHub Actions — reads a failed pipeline, works out what actually broke, and says how far to trust the answer
 context: Solo project — CLI, rule catalog, evaluation harness, and release pipeline
 bullets:
   - Cuts a 3,000-line job log down to the ~20 lines that explain the failure
-  - 59 failure signatures, each with a real fix, and a confidence that can say "needs human review"
-  - 489 tests and an offline eval harness scored against a labelled corpus
+  - 64 failure signatures, each with a real fix, and a confidence that can say "needs human review"
+  - 584 tests and an offline eval harness scored against a labelled corpus
 stack: [Python, pytest, Docker, GitHub Actions, Claude API]
 order: 1
 thumbnail: /images/pipelinemd/pipelinemd-card.webp
@@ -14,6 +14,8 @@ links:
   github: https://github.com/rbalukja15/pipelinemd
   live: https://pypi.org/project/pipelinemd/
   liveLabel: PyPI
+  demo: https://rbalukja15.github.io/pipelinemd/
+  writeup: https://github.com/rbalukja15/pipelinemd/blob/main/docs/case-study.md
 ---
 
 ## Problem
@@ -26,9 +28,9 @@ I wanted a tool that reads a log the way someone experienced reads it. Throw awa
 
 ## What I built
 
-A command-line tool. Give it a GitLab job URL or a log file and it tells you what broke and what to do about it.
+A command-line tool. Give it a failed GitLab job or GitHub Actions run, or just a log file, and it tells you what broke and what to do about it.
 
-It works in two halves. The first is deterministic. It replays the trace the way a terminal would, so escape codes and carriage returns resolve and a progress bar that rewrote itself collapses to one line. It scores every line for failure-likeness, grows a window around the strong signals, merges the windows, and spends a line budget on the best of them. What survives gets matched against a catalog of 59 known failure signatures, each carrying a fix. Every report lands in one of seven classes: `yaml`, `ci_vars`, `image_pull`, `cache_artifact`, `test`, `runner`, `flaky`.
+It works in two halves. The first is deterministic. It replays the trace the way a terminal would, so escape codes and carriage returns resolve and a progress bar that rewrote itself collapses to one line. It scores every line for failure-likeness, grows a window around the strong signals, merges the windows, and spends a line budget on the best of them. What survives gets matched against a catalog of 64 known failure signatures, each carrying a fix. Every report lands in one of seven classes: `yaml`, `ci_vars`, `image_pull`, `cache_artifact`, `test`, `runner`, `flaky`.
 
 On one of the repo's fixture logs, 3,052 lines, 23 survive. The ESLint error that stopped the build is one of them.
 
@@ -37,9 +39,9 @@ On one of the repo's fixture logs, 3,052 lines, 23 survive. The ESLint error tha
   <figcaption>Every report says which rule fired, what to try, and what it cost. The timeline marks the section that failed and the ones that only ran afterwards.</figcaption>
 </figure>
 
-`flaky` is the class I was most careful with. It never comes from a guess about the error text. It comes from GitLab's retry history: if another attempt of the same job passed on the same commit, the job is flaky and the report says so. Otherwise it isn't, however transient the error looks.
+`flaky` is the class I was most careful with. It never comes from a guess about the error text. It comes from the CI's own retry history, GitLab's retries or GitHub's re-run attempts: if another attempt of the same job passed on the same commit, the job is flaky and the report says so. Otherwise it isn't, however transient the error looks.
 
-The second half is optional. With an API key, Claude reads the distilled evidence and names the root cause, separating the fault from its fallout. It never sees the raw log, only the lines that survived. It has to cite the evidence lines it relied on, every citation is resolved back to a real line, and a diagnosis that cites nothing real is rejected rather than printed.
+The second half is optional. With an API key, Claude reads the distilled evidence and names the root cause, separating the fault from its fallout. It never sees the raw log, only the lines that survived. It has to cite the evidence lines it relied on, and code, not the model, checks every cited line against the excerpt it was shown. A diagnosis that cites nothing real is rejected rather than printed. One that cites a mix is printed with the invented line numbers called out.
 
 The first half needs no API key, no model, and no third-party packages. `pip install pipelinemd` installs a tool whose dependency list is empty.
 
@@ -56,19 +58,23 @@ There are two places the tool decides what matters, and I kept them apart becaus
 
 Confidence is never higher than the weakest signal behind it. When it comes out low the report says **needs human review** and lists why, instead of dressing up a guess. Cost is printed on every run: $0 when only the rules ran, and an estimate from the API's own token counts when Claude was asked.
 
+It only reads. On GitLab its token needs `read_api`, on GitHub `actions: read`. The one write is opt-in and fenced in. For a failure in the pipeline file itself, like a job naming a stage that was never declared, `diagnose --open-mr` has Claude write the corrected file and opens a draft merge request. It does that only for a `yaml_patch` failure at high confidence, in a project carrying a `pipelinemd-autofix` label, with its own write token, and only if GitLab's CI Lint accepts the file and the change is 20 lines or fewer. It never pushes to an existing branch and never merges.
+
 ## Testing & quality
 
-489 test functions across 22 files. Beyond those, `make eval` scores the deterministic half against a corpus of 62 labelled job traces. It runs offline, takes a couple of seconds, and gives the same answer every time.
+584 test functions across 26 files. Beyond those, `make eval` scores the deterministic half against a corpus of 69 labelled job traces. It runs offline, takes a couple of seconds, gives the same answer every time, and runs as a gate on every push.
 
-The number it produces needs a caveat, and the repo carries that caveat rather than hiding it. Every corpus case is authored, which means the failure and its label were written by the same hand that wrote the rules they get matched against. That makes the score a regression signal, not a measurement of real-world accuracy. Every case has a `provenance` field so the distinction can't quietly get lost as observed traces are added.
+The number it produces needs a caveat, and the repo carries that caveat rather than hiding it. 68 of the 69 cases are authored, which means the failure and its label were written by the same hand that wrote the rules they get matched against. That makes the score a regression signal, not a measurement of real-world accuracy. The 69th case is observed, a real failure from the project's own CI, and every case carries a `provenance` field so the two kinds can't quietly blur as more real traces arrive.
 
-What the eval is genuinely good for is calibration. Class accuracy is 91% on the cases it reports at high confidence and 30% on the ones it reports at low. Low confidence means what it says, which is the property I actually wanted.
+What the eval is genuinely good for is calibration. Class accuracy is 92% on the cases it reports at high confidence and 27% on the ones it reports at low. Low confidence means what it says, which is the property I actually wanted.
 
-The LLM half is deliberately not scored. It needs an API key, costs money per run, and isn't reproducible, so folding it in would turn a regression gate into a bill and make the number depend on which model answered that day.
+I also kept the measurement and the tuning apart. The first run of the harness put the right rule first in 47 of 53 cases. Those findings were written down and fixed in their own changes, because tuning rules in the same change that introduces the measurement would have made the first number meaningless.
+
+The Claude half is scored separately, by `make eval-llm`: its class accuracy next to the rules', whether its citations were real, whether it agreed with the top rule, and what the run cost. That costs money and isn't reproducible, so it runs under a spending cap and never gates a build. No scored run is recorded yet, so there is no number for it here.
 
 ## Outcome
 
-Published. `pip install pipelinemd` gets you version 0.2.0, MIT licensed, Python 3.11 or newer, with a multi-architecture Docker image if you'd rather skip Python.
+Version 1.0.0 is on PyPI, MIT licensed, Python 3.11 or newer, with a multi-architecture Docker image if you'd rather skip Python. A demo site, rebuilt from main on every merge, shows the report for five failed jobs.
 
 The most useful thing that happened to it was failing its own test. The first real CI log it ever met was one of its own: a build where `pip install -e .` died because `pyproject.toml` pointed at a README that branch didn't have yet. The distiller did its job, keeping the `OSError: Readme file does not exist` line that explains everything. The rule catalog did not. pip wraps every failing build backend in the same generic `subprocess-exited-with-error` line, one rule matched that line alone, and the tool confidently told me to install a C compiler. Nothing was being compiled.
 
@@ -76,7 +82,7 @@ A confident wrong answer is the worst thing the catalog can do, so that rule no 
 
 <figure class="shot">
   <img src="/images/pipelinemd/needs-review.webp" width="1200" height="683" loading="lazy" decoding="async" alt="A pipelinemd report headed No known failure signature matched, showing class unclassified, low confidence, and a highlighted panel reading Needs human review, confidence is low because no rule fired." />
-  <figcaption>"I don't know, and here is the line to read" is the honest answer while no rule covers packaging metadata failures. That log is now the first fixture for the rule that will.</figcaption>
+  <figcaption>"I don't know, and here is the line to read" is the honest answer while no rule covers packaging metadata failures. That log is now the corpus's one observed case.</figcaption>
 </figure>
 
-Every corpus case passes. The first real log it met broke a rule, which is the argument for growing the corpus with observed traces rather than trusting a number drawn from authored ones. An auto-fix merge request generator and support for diagnosing GitHub Actions runs are the next two features.
+Authored cases are easy to pass. The first real log it met broke a rule, which is the argument for growing the corpus with observed traces rather than trusting a number drawn from authored ones. That is what comes next, along with a first recorded run of the diagnosis eval and more GitHub Actions rules, since the catalog's coverage there is still thin next to GitLab's. The [full write-up](https://github.com/rbalukja15/pipelinemd/blob/main/docs/case-study.md) goes deeper on how it is measured.
